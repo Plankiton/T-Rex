@@ -18,7 +18,7 @@ In the `pattern` you can use regular expressions like:
 "^word \-\> (foo|bar)": "foobar is a stranger word!"
 ```
 
-> But never use regular expressions in the `replace` or the translater will replace the especial symbols.
+> But never use regular expressions in the `replace`.
 
 You can too to use the variables for get informations of the text:
 
@@ -26,4 +26,4 @@ You can too to use the variables for get informations of the text:
 "^word \-\> %foobar&": "%foobar& is a stranger word!"
 ```
 
-> When the translater find `%foobar&` in `replace` will replace to the text in `pattern`, so, "word -> joao" would be replaced to "joao is a stranger word!"
+> When the translater find `%foobar&` in `replace` will replace by the text in `pattern`, so, "word -> joao" would be replaced to "joao is a stranger word!"
