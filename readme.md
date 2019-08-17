@@ -10,7 +10,7 @@ You have to make a file with the extension ".yml" or ".yaml" and write the `patt
 foo: bar
 ```
 
-> When the translate find the word "pattern" will translate to "replace".
+> When the translater find the word "pattern" will translate to "replace".
 
 In the `pattern` you can use regular exprections like:
 
