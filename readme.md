@@ -20,7 +20,7 @@ In the `pattern` you can use regular expressions like:
 
 > But never use regular expressions in the `replace` or the translater will replace the especial symbols.
 
-But this is easy to the translater, you can to use the variables for get informations of the text:
+You can too to use the variables for get informations of the text:
 
 ```YAML
 "^word \-\> %foobar&": "%foobar& is a stranger word!"
