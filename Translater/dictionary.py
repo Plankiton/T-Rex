@@ -1,4 +1,4 @@
-from .soul import *
+from .loader import *
 
 def debug ( *unargs,**args ):
     print()
@@ -12,7 +12,7 @@ def debug ( *unargs,**args ):
 
 class Dictionary:
     def __init__ (self, _file = None):
-        self.soul = Soul(_file)
+        self.config = Config(_file)
 
     def get_var_templates (self, _text ):
         i = 0
@@ -42,7 +42,7 @@ class Dictionary:
                 lvars [ "{}".format(var_name) ] = var_patt
 
             else:
-                # Geting list of variables with pattern on key of Soul
+                # Geting list of variables with pattern on key of Config
                 var_name = var [ 1 : var.index('?') ].strip()
                 var_patt = var [ var.index('?')+1 : var.rindex('&') ].strip()
 
@@ -213,7 +213,7 @@ class Dictionary:
 
     def get_local_functions_variables(self, _lines):
 
-        Keys = self.soul.keys
+        Keys = self.config.keys
         local_variables = {}
 
         # Registring the keys with local functions
@@ -262,7 +262,7 @@ class Dictionary:
 
     def do_local_functions( self, _key , _local, _lines, _local_variables = {} ):
 
-        Keys = self.soul.keys
+        Keys = self.config.keys
 
         if type(_key.end) == dict:
             end_key = _key.end['name']
@@ -273,7 +273,7 @@ class Dictionary:
             return _lines
 
         if not _key.locals:
-            _key.locals = Soul.Key.Local({})
+            _key.locals = Config.Key.Local({})
 
         exceptions = []
         if _key.childs:
@@ -350,7 +350,6 @@ class Dictionary:
     def do_functions(self, _key, _lines):
         # Replacing keys without variables
         for ln in range(len(_lines)):
-            _lines [ ln ] = _lines [ ln ].strip()
             line = _lines [ ln ]
 
             _lines[ln] = self.replace (
@@ -407,7 +406,7 @@ class Dictionary:
     # Translating a text
     def translate (self, _text):
 
-        Keys = self.soul.keys
+        Keys = self.config.keys
         lines = _text.split('\n')
 
         local_variables = self.get_local_functions_variables( lines )

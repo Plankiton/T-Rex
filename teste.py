@@ -1,33 +1,33 @@
-from power import *
+from Translater import *
 
 txt = """
 algoritmo "joao"
 
-    var
-    j, k: inteiro
+var
+j, k: inteiro
 
-    inicio
+inicio
 
-    para i de 4 ate 8 faca
-        print ("joao")
-    fimpara
+para i de 4 ate 8 faca
+print ("joao")
+fimpara
 
-    escolha j
+escolha j
 
-        caso 1
-            print("porra")
-        caso 2
-            print(" outra porra")
-        caso 67
-            print(" boiolage " )
-        caso 45
-            print(" joao ")
-        outro caso
-            print(" outra porra denovo")
+caso 1
+print("porra")
+caso 2
+print(" outra porra")
+caso 67
+print(" boiolage " )
+caso 45
+print(" joao ")
+outro caso
+print(" outra porra denovo")
 
-    fimescolha
+fimescolha
 
 fimalgoritmo
 """
 
-print(translate(txt, 'soul/Portugol:Python/pt:py.soul'))
+print(translate(txt, 'portugol_to_python.yml'))

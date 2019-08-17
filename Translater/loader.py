@@ -2,7 +2,7 @@ from .file import *
 import re as REGEX
 from yaml import safe_load as yaml
 
-class Soul:
+class Config:
     class Key:
         named_keys = []
 
