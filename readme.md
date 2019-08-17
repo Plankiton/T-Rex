@@ -12,13 +12,13 @@ foo: bar
 
 > When the translater find the word "foo" will translate to "bar".
 
-In the `pattern` you can use regular exprections like:
+In the `pattern` you can use regular expressions like:
 
 ```YAML
 "^word \-\> (foo|bar)": "foobar is a stranger word!"
 ```
 
-> But never use regular exprections in the `replace` or the translater will replace the especial symbols.
+> But never use regular expressions in the `replace` or the translater will replace the especial symbols.
 
 But this is easy to the translater, you can to use the variables for get informations of the text:
 
