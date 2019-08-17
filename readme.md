@@ -26,4 +26,4 @@ You can too to use the variables for get informations of the text:
 "^word \-\> %foobar&": "%foobar& is a stranger word!"
 ```
 
-> When the translater find `%foobar&` in `replace` will replace by the text in `pattern`, so, "word -> joao" would be replaced by "joao is a stranger word!"
+> When the translater find `%foobar&` in `replace` will replace by the text in `pattern`, so, the text "word -> joao" would be replaced by "joao is a stranger word!"
