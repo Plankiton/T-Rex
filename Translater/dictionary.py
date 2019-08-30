@@ -245,7 +245,7 @@ class Dictionary:
                         while lln < len( _lines ):
 
                             if self.check ( Keys [ atual_key.end ].key , _lines[lln] ):
-                                local_variables [ atual_key.name ].append( {'variables': variables, 'begin': ln, 'end': lln } )
+                                local_variables [ atual_key.name ].append( { 'variables': variables, 'begin': ln, 'end': lln } )
                                 break
                             lln += 1
 
@@ -254,26 +254,14 @@ class Dictionary:
                         while lln > ln:
 
                             if self.check ( Keys [ atual_key.end ].key , _lines[lln] ):
-                                local_variables [ atual_key.name ].append( {'variables': variables, 'begin': ln, 'end': lln } )
+                                local_variables [ atual_key.name ].append( { 'variables': variables, 'begin': ln, 'end': lln } )
                                 break
                             lln -= 1
                     atual_key.end = end_aux
         return local_variables
 
-    def do_local_functions( self, _key , _local, _lines, _local_variables = {} ):
 
-        Keys = self.config.keys
-
-        if type(_key.end) == dict:
-            end_key = _key.end['name']
-        else:
-            end_key = _key.end
-
-        if _local['begin'] == _local['end']:
-            return _lines
-
-        if not _key.locals:
-            _key.locals = Config.Key.Local({})
+    def get_childs_exceptions ( self, _key ):
 
         exceptions = []
         if _key.childs:
@@ -304,6 +292,25 @@ class Dictionary:
                             'pattern': Keys[ end_child ].key,
                             'replace': Keys[ end_child ].replace if type(Keys[child].end) != dict else Keys[child].end['replace'],
                         })
+        return exceptions
+
+
+    def do_local_functions( self, _key , _local, _lines, _local_variables = {} ):
+
+        Keys = self.config.keys
+
+        if type(_key.end) == dict:
+            end_key = _key.end['name']
+        else:
+            end_key = _key.end
+
+        if _local['begin'] == _local['end']:
+            return _lines
+
+        if not _key.locals:
+            _key.locals = Config.Key.Local({})
+
+        exceptions = self.get_childs_exceptions( _key )
 
         # Doing the exceptions
         for exc in exceptions:
@@ -317,7 +324,6 @@ class Dictionary:
         for line in range( _local['begin'], _local['end'] ):
 
             # Local replaces
-
             for word in _key.locals.keywords:
 
                 repl = _key.locals.keywords[ word ]
@@ -348,6 +354,7 @@ class Dictionary:
 
 
     def do_functions(self, _key, _lines):
+
         # Replacing keys without variables
         for ln in range(len(_lines)):
             line = _lines [ ln ]
@@ -374,9 +381,11 @@ class Dictionary:
                 if repl.strip() != _lines[ln].strip():
                     _lines[ln] = repl
                     break
+
         return _lines
 
     def get_eval_templates (self, _text ):
+
         i = 0
         f = 0
         list_eval = []
@@ -401,6 +410,7 @@ class Dictionary:
 
         for cmd in evals:
             _text = str(eval(cmd[2:len(cmd)-1])).join( _text.split(cmd) )
+
         return _text
 
     # Translating a text
@@ -431,3 +441,30 @@ class Dictionary:
             lines[ln] = self.do_evals( lines[ln] )
 
         return '\n'.join(lines)
+
+    # Identing texts
+    def ident (self, _text, _rules):
+
+        lines = _text.split('\n')
+
+        level = 0
+        lines_to_ident = [0 for i in range ( len(lines))]
+        for ln in range( 1, len( lines )-1 ):
+
+            if REGEX.search( _rules[True], lines[ ln-1 ].strip() ):
+                level += 1
+            if REGEX.search( _rules[False], lines[ ln ].strip() ):
+                level -= 1
+
+            lines_to_ident [ ln ] = level
+
+        text = ''
+        for ln in range( len( lines ) ):
+            line = '   '*lines_to_ident [ ln ]+lines[ln]+'\n'
+
+            if line.strip() == '':
+                line = '\n'
+
+            text += line
+
+        return text.strip()+'\n'

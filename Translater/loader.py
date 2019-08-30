@@ -3,6 +3,7 @@ import re as REGEX
 from yaml import safe_load as yaml
 
 class Config:
+
     class Key:
         named_keys = []
 
@@ -106,6 +107,7 @@ class Config:
     def __init__ (self, _file = None):
 
         self.file = File(_file)
+        self.properties = { ':identation': { True: '', False: ''}}
         self.keys = {}
 
         # Loading data
@@ -115,19 +117,21 @@ class Config:
         # Saving data
         for key in dictionary:
 
-            if type (dictionary[key]) == str:
+            if ':' is key[0]:
+                self.properties[key] = dictionary[key]
+            else:
+                if type (dictionary[key]) == str:
 
-                key_tmp = self.Key(_rep = dictionary[key], _key = key)
-                if key_tmp.name:
+                    key_tmp = self.Key(_rep = dictionary[key], _key = key)
+                    if key_tmp.name:
+                        self.keys[key_tmp.name] = key_tmp
+                    else:
+                        self.keys[key] = key_tmp
+
+                elif type (dictionary[key]) == dict:
+
+                    key_tmp = self.Key(_keys = dictionary[key], _key = key )
                     self.keys[key_tmp.name] = key_tmp
-                else:
-                    self.keys[key] = key_tmp
-
-            elif type (dictionary[key]) == dict:
-
-                key_tmp = self.Key(_keys = dictionary[key], _key = key )
-                self.keys[key_tmp.name] = key_tmp
-
 
     def __str__ (self):
         return str(self.dict)

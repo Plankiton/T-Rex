@@ -1,0 +1,16 @@
+alg "joao"
+
+var
+
+j, i: inteiro
+coisas: vetor [ 3, 5 ] de caractere
+coisas: vetor [ 5 ] de caractere
+
+inicio
+
+para i de 0 ate 5 faca
+print ( i )
+j <- "joao"
+fimpara
+
+fimalg

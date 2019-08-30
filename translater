@@ -1,0 +1,36 @@
+#!/usr/bin/python3
+
+from argparse import ArgumentParser as Parser
+from Translater.dictionary import *
+from sys import stderr
+
+args = Parser(
+    description = "A translater of codes, maked especialy for you porte the codes from some language to some language",
+    prog = "Translater"
+)
+
+args.add_argument( 'file', help = "File with the code to translation.", type = str)
+args.add_argument( '-c' , '--config', help = "Yaml with the dictionary for the translation.", type = str )
+args.add_argument( '-o', '--output', help = "File name where will write the output.", type = str )
+
+args = args.parse_args()
+
+config = args.config
+file = File(args.file)
+
+output = File( args.output )
+
+if config:
+
+    lang = Dictionary( config )
+    file.text = lang.translate( file.text )
+    translated = lang.ident ( file.text, lang.config.properties[':identation'] )
+
+    if output.filename:
+        output.write( translated )
+
+    print( translated )
+
+else:
+    print( "Soul Error: you dont set the configuration file", file = stderr)
+    exit(1)
