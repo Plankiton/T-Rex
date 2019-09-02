@@ -2,7 +2,7 @@
 
 If you did have problems with text conversion, this ultil is the solution, maked for anyperson and easy to learn, you just have to make a configuration file with the patterns of the languages and the translater will translate.
 
-# How its works
+# Get Started
 
 You have to make a file with the extension ".yml" or ".yaml" and write the `pattern` and the `replace` (`<pattern>: <replace>`):
 
@@ -15,7 +15,7 @@ foo: bar
 In the `pattern` you can use regular expressions like:
 
 ```YAML
-"^word \-\> (foo|bar)": "foobar is a stranger word!"
+'^word \-\> (foo|bar)': "foobar is a stranger word!"
 ```
 
 > But never use regular expressions in the `replace`.
@@ -23,7 +23,9 @@ In the `pattern` you can use regular expressions like:
 You can too to use the variables for get informations of the text:
 
 ```YAML
-"^word \-\> %foobar&": "%foobar& is a stranger word!"
+'^word \-\> %foobar&': "%foobar& is a stranger word!"
 ```
 
 > When the translater find `%foobar&` in `replace` will replace by the text in `pattern`, so, the text "word -> joao" would be replaced by "joao is a stranger word!"
+
+[The complete documentation](docs.md)

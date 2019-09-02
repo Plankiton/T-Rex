@@ -213,7 +213,7 @@ class Dictionary:
 
     def get_local_functions_variables(self, _lines):
 
-        Keys = self.config.keys
+        Keys = self.config.elements
         local_variables = {}
 
         # Registring the keys with local functions
@@ -229,9 +229,9 @@ class Dictionary:
             for ln in range( len( _lines ) ):
                 line = _lines [ ln ]
 
-                if self.check ( atual_key.key, line ) and atual_key.end:
+                if self.check ( atual_key.pattern, line ) and atual_key.end:
 
-                    variables = self.get_vars( atual_key.key, line )
+                    variables = self.get_vars( atual_key.pattern, line )
                     if variables == None:
                         variables = {}
 
@@ -244,7 +244,7 @@ class Dictionary:
                         lln = ln + 1
                         while lln < len( _lines ):
 
-                            if self.check ( Keys [ atual_key.end ].key , _lines[lln] ):
+                            if self.check ( Keys [ atual_key.end ].pattern, _lines[lln] ):
                                 local_variables [ atual_key.name ].append( { 'variables': variables, 'begin': ln, 'end': lln } )
                                 break
                             lln += 1
@@ -253,7 +253,7 @@ class Dictionary:
                         lln = len( _lines ) - 1
                         while lln > ln:
 
-                            if self.check ( Keys [ atual_key.end ].key , _lines[lln] ):
+                            if self.check ( Keys [ atual_key.end ].pattern, _lines[lln] ):
                                 local_variables [ atual_key.name ].append( { 'variables': variables, 'begin': ln, 'end': lln } )
                                 break
                             lln -= 1
@@ -270,12 +270,12 @@ class Dictionary:
                 child = _key.childs()[i]
 
                 if type ( child ) == str :
-                    _key.locals.functions[ Keys[child].key ] = Keys[child].replace
+                    _key.locals.functions[ Keys[child].pattern] = Keys[child].replace
 
                 else:
                     child = _key.childs()[i]['name']
 
-                    _key.locals.functions[ Keys[child].key ] = _key.childs()[i]['replace']
+                    _key.locals.functions[ Keys[child].pattern] = _key.childs()[i]['replace']
                 _key.locals.names [ Keys[child].name ] = Keys[child].key
 
                 if Keys[child].end:
@@ -297,7 +297,7 @@ class Dictionary:
 
     def do_local_functions( self, _key , _local, _lines, _local_variables = {} ):
 
-        Keys = self.config.keys
+        Keys = self.config.elements
 
         if type(_key.end) == dict:
             end_key = _key.end['name']
@@ -361,7 +361,7 @@ class Dictionary:
 
             _lines[ln] = self.replace (
 
-                _key = _key.key,
+                _key = _key.pattern,
                 _rep = _key.replace,
                 _text = line,
 
@@ -416,7 +416,7 @@ class Dictionary:
     # Translating a text
     def translate (self, _text):
 
-        Keys = self.config.keys
+        Keys = self.config.elements
         lines = _text.split('\n')
 
         local_variables = self.get_local_functions_variables( lines )
@@ -424,9 +424,6 @@ class Dictionary:
         for key in Keys:
 
             atual_key = Keys[key]
-
-            # Doing evals in keys
-            key = self.do_evals( key )
 
             # Doing local functions
             if atual_key.name in local_variables:

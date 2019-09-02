@@ -4,7 +4,7 @@ from yaml import safe_load as yaml
 
 class Config:
 
-    class Key:
+    class Element:
         named_keys = []
 
         class Local:
@@ -43,7 +43,7 @@ class Config:
             self.functions = {}
             self.locals = None
             self.replace = _rep
-            self.key = _key
+            self.pattern = _key
             self.name = _key
             self.childs = None
             self.end = None
@@ -54,11 +54,15 @@ class Config:
                 _keys['fnc'] = { _key: _rep }
                 _keys['fnc'] = { _key: _rep }
 
-            if 'k' in _keys:
-                self.key = _keys['k']
-                self.name = _key
-            elif 'key' in _keys:
-                self.key = _keys['key']
+            ptn = None
+            if 'p' in _keys:
+                ptn = 'p'
+            elif 'ptn' in _keys:
+                ptn = 'ptn'
+            elif 'pattern' in _keys:
+                ptn = 'pattern'
+            if (ptn == 'p') or (ptn == 'ptn') or (ptn == 'pattern'):
+                self.pattern = _keys[ptn]
                 self.name = _key
 
             if _keys:
@@ -82,7 +86,7 @@ class Config:
 
             out = {
                 'name': self.name,
-                'key': self.key,
+                'key': self.pattern,
                 'end': self.end,
                 'functions': self.functions,
                 'locals': self.locals() if self.locals else self.locals,
@@ -95,7 +99,7 @@ class Config:
 
             out = {
                 'name': self.name,
-                'key': self.key,
+                'key': self.pattern,
                 'end': self.end,
                 'functions': self.functions,
                 'locals': self.locals(),
@@ -108,7 +112,7 @@ class Config:
 
         self.file = File(_file)
         self.properties = { ':identation': { True: '', False: ''}}
-        self.keys = {}
+        self.elements = {}
 
         # Loading data
         dictionary = yaml(self.file.text)
@@ -122,16 +126,16 @@ class Config:
             else:
                 if type (dictionary[key]) == str:
 
-                    key_tmp = self.Key(_rep = dictionary[key], _key = key)
+                    key_tmp = self.Element(_rep = dictionary[key], _key = key)
                     if key_tmp.name:
-                        self.keys[key_tmp.name] = key_tmp
+                        self.elements[key_tmp.name] = key_tmp
                     else:
-                        self.keys[key] = key_tmp
+                        self.elements[key] = key_tmp
 
                 elif type (dictionary[key]) == dict:
 
-                    key_tmp = self.Key(_keys = dictionary[key], _key = key )
-                    self.keys[key_tmp.name] = key_tmp
+                    key_tmp = self.Element(_keys = dictionary[key], _key = key )
+                    self.elements[key_tmp.name] = key_tmp
 
     def __str__ (self):
         return str(self.dict)
