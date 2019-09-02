@@ -41,7 +41,7 @@
    end: endswitch
    replace: 'if %expression&: # {'
 
-'^caso %value&':
+'^caso %value?.{1,}&':
    name: case
    replace: 'if %expression& == %value&: # {'
    end:

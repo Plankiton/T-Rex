@@ -16,16 +16,18 @@ if __name__ == "__main__": # joao {
 
    if j: # {
 
-      caso "j"
-      rodnei = "marrom"
-      caso "joao"
-      rodnei = "roxo"
-      caso "carlos"
-      rodnei = "vermelho"
-   # }
-   else: #{
-      rodnei = "joao"
+      if j == "j": # {
+         rodnei = "marrom"
+      # }
+      elif j == "joao": # {
+         rodnei = "roxo"
+      # }
+      elif j == "carlos": # {
+         rodnei = "vermelho"
+      # }
+      else: #{
+         rodnei = "joao"
+
+      # }
 
    # }
-
-# }
