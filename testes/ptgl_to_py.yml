@@ -30,8 +30,8 @@
   local:
     '%var?\w{1,}&\ {0,}<-\ {0,}%val?.{1,}&': '!{"%var&".strip()} = %val&'
 
-end:
-  pattern: '^fim\w{0,}'
+'^fim\w{0,}':
+  name: end
   replace: '# }'
 
 # Escolha.. caso.. outro caso

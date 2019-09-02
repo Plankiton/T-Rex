@@ -261,8 +261,9 @@ class Dictionary:
         return local_variables
 
 
-    def get_childs_exceptions ( self, _key ):
+    def get_childs_exceptions ( self, _key, _local_variables ):
 
+        Keys = self.config.elements
         exceptions = []
         if _key.childs:
             _key.locals.names = {}
@@ -276,7 +277,7 @@ class Dictionary:
                     child = _key.childs()[i]['name']
 
                     _key.locals.functions[ Keys[child].pattern] = _key.childs()[i]['replace']
-                _key.locals.names [ Keys[child].name ] = Keys[child].key
+                _key.locals.names [ Keys[child].name ] = Keys[child].pattern
 
                 if Keys[child].end:
 
@@ -308,9 +309,9 @@ class Dictionary:
             return _lines
 
         if not _key.locals:
-            _key.locals = Config.Key.Local({})
+            _key.locals = Config.Element.Local({})
 
-        exceptions = self.get_childs_exceptions( _key )
+        exceptions = self.get_childs_exceptions( _key, _local_variables )
 
         # Doing the exceptions
         for exc in exceptions:
