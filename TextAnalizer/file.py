@@ -2,7 +2,7 @@ from os import sep as barra
 
 class File:
     def __init__ (self, _file = None):
-        self.dir = ''
+        self.dir = '.'
         self.text = ''
         self.filename = _file
         self.object = None

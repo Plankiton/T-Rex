@@ -11,8 +11,12 @@ def debug ( *unargs,**args ):
         input()
 
 class Dictionary:
-    def __init__ (self, _file = None):
-        self.config = Config(_file)
+    def __init__ (self, _conf = None):
+        if _conf:
+            if '@c' in _conf [ :2 ]:
+                self.config = Config( _text = _conf [2: ])
+            else:
+                self.config = Config(_conf)
 
     def get_var_templates (self, _text ):
         i = 0
@@ -430,9 +434,9 @@ class Dictionary:
             if atual_key.name in local_variables:
                 for local in local_variables [ atual_key.name ]:
                     lines = self.do_local_functions(atual_key, local, lines, local_variables)
-
-            # Doing global functions
-            lines = self.do_functions( atual_key, lines)
+            else:
+                # Doing global functions
+                lines = self.do_functions( atual_key, lines)
 
         # Doing evals in replaces
         for ln in range( len( lines ) ):

@@ -1,0 +1,73 @@
+#!/usr/bin/python3
+
+from argparse import ArgumentParser as Parser
+from TextAnalizer.dictionary import *
+from sys import stderr, stdin, argv
+
+args = Parser(
+    description = "A translater of codes, maked especialy for you porte the codes from some language to some language",
+    prog = "Translater"
+)
+
+if not '-c' in argv and not '--config' in argv:
+    args.add_argument( 'pattern', help = 'Short pattern to search in text.', type = str )
+args.add_argument( '-c', '--config', help = "Yaml with the dictionary to search in text.", type = str )
+args.add_argument( '-f', '--file', help = "File with the code to translation.", type = str)
+args.add_argument( '-o', '--output', help = "File name where will write the output.", type = str )
+args.add_argument( '-d', '--detail',
+                  help = "Output (stdout) will be with detailed informations",
+                  action = 'append_const',
+                  default = [],
+                  const = True
+)
+
+args = args.parse_args()
+
+config = args.config if args.config else args.pattern
+
+file = File(args.file) if args.file else None
+output = File( args.output ) if args.output else None
+
+if config:
+
+    lang = Dictionary( )
+
+    text = stdin.read()
+
+    variables = {}
+
+    ln = 1
+    for line in text.strip().split('\n'):
+        variables[ln] = {}
+        ln += 1
+
+    ln = 0
+    out_text = ''
+    for line in text.strip().split('\n'):
+        ln += 1
+
+        vars = lang.get_vars( config, line.strip() )
+        if vars is None:
+            vars = {}
+
+        for var in vars:
+            variables[ ln ][ var ] = vars[ var ]
+
+        if args.detail:
+            spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
+            spc_v = spc_l + (' '*len(str(ln)))
+
+            print ( ' ', spc_l, ln, ': "', line, '"\n', spc_v, vars, sep = '' )
+            out_text += str({ 'line': { 'number': ln, 'text': line } , 'vars': variables[ ln ] })+'\n'
+
+    if not args.detail:
+        print ( variables )
+        if output:
+            output.write( str( variables ) )
+    else:
+        if output:
+            output.write( out_text )
+
+else:
+    print( "Soul Error: you dont set the configuration file", file = stderr)
+    exit(1)

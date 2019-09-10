@@ -1,0 +1,9 @@
+foo:
+   pattern: '^foo %thing&'
+   replace: 'bar %thing&'
+   local:
+      'thing': 'foo %thing& bar'
+   end: bar
+bar:
+   pattern: '^bar'
+   replace: 'bar'

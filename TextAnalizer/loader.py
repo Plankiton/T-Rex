@@ -108,15 +108,19 @@ class Config:
 
             return out
 
-    def __init__ (self, _file = None):
+    def __init__ (self, _file = None, _text = None ):
 
-        self.file = File(_file)
+        self.text = _text
+        if not _text:
+            self.file = File(_file)
+            self.text = self.file.text
+
         self.properties = { ':identation': { True: '', False: ''}}
         self.elements = {}
 
         # Loading data
-        dictionary = yaml(self.file.text)
-        self.dict = yaml(self.file.text)
+        dictionary = yaml( self.text )
+        self.dict  = dictionary
 
         # Saving data
         for key in dictionary:
