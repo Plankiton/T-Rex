@@ -39,73 +39,67 @@ config = args.config if args.config else args.pattern
 file = File(args.file) if args.file else None
 output = File( args.output ) if args.output else None
 
-if config:
+lang = Dictionary( )
 
-    lang = Dictionary( )
+text = stdin.read()
 
-    text = stdin.read()
+variables = {}
 
-    variables = {}
+lines = {'i':0, 'f':len(text.strip().split('\n'))}
+if args.lines:
+    lines = {
+        'i': int(args.lines[:args.lines.index('-')].strip()),
+        'f': int(args.lines[args.lines.index('-')+1:].strip())
+    }
 
-    lines = {'i':0, 'f':len(text.strip().split('\n'))}
-    if args.lines:
-        lines = {
-            'i': int(args.lines[:args.lines.index('-')].strip()),
-            'f': int(args.lines[args.lines.index('-')+1:].strip())
-        }
+if not args.search[0]:
+    ln = 1
+    for line in text.strip().split('\n'):
+        variables[ln] = {}
+        ln += 1
 
-    if not args.search[0]:
-        ln = 1
-        for line in text.strip().split('\n'):
-            variables[ln] = {}
-            ln += 1
+    ln = 0
+    out_text = ''
+    for line in text.strip().split('\n'):
+        ln += 1
 
-        ln = 0
-        out_text = ''
-        for line in text.strip().split('\n'):
-            ln += 1
+        if ln >= lines['i'] and ln <= lines['f']:
+            vars = lang.get_vars( config, line.strip() )
 
-            if ln >= lines['i'] and ln <= lines['f']:
-                vars = lang.get_vars( config, line.strip() )
+            if vars:
+                for var in vars:
+                    variables[ ln ][ var ] = vars[ var ]
 
-                if vars:
-                    for var in vars:
-                        variables[ ln ][ var ] = vars[ var ]
+                if args.detail[0]:
+                    spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
+                    spc_v = spc_l + (' '*len(str(ln)))
 
-                    if args.detail[0]:
-                        spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
-                        spc_v = spc_l + (' '*len(str(ln)))
+                    print ( ' ', spc_l, ln, ': "', line, '"\n', spc_v, vars, sep = '' )
+                    out_text += str({ 'line': { 'number': ln, 'text': line } , 'vars': variables[ ln ] })+'\n'
+            else:
+                variables.pop ( ln )
 
-                        print ( ' ', spc_l, ln, ': "', line, '"\n', spc_v, vars, sep = '' )
-                        out_text += str({ 'line': { 'number': ln, 'text': line } , 'vars': variables[ ln ] })+'\n'
-                else:
-                    variables.pop ( ln )
-
-        if not args.detail[0]:
-            print ( variables )
-            if output:
-                output.write( str( variables ) )
-        else:
-            if output:
-                output.write( out_text )
+    if not args.detail[0]:
+        print ( variables )
+        if output:
+            output.write( str( variables ) )
     else:
-        ln = 0
-        out_text = ''
-        for line in text.strip().split('\n'):
-            ln += 1
-
-            if ln >= lines['i'] and ln <= lines['f']:
-                if lang.check( config, line.strip() ):
-                    if args.detail[0]:
-                        spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
-                        print ( ' ', spc_l, ln, ': "', line, '"')
-                        out_text += '{}: "{}"\n'.format(ln, line)
-                    else:
-                        print ( line )
-                        out_text += line
         if output:
             output.write( out_text )
-
 else:
-    print( "Soul Error: you dont set the configuration file", file = stderr)
-    exit(1)
+    ln = 0
+    out_text = ''
+    for line in text.strip().split('\n'):
+        ln += 1
+
+        if ln >= lines['i'] and ln <= lines['f']:
+            if lang.check( config, line.strip() ):
+                if args.detail[0]:
+                    spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
+                    print ( ' ', spc_l, ln, ': "', line, '"')
+                    out_text += '{}: "{}"\n'.format(ln, line)
+                else:
+                    print ( line )
+                    out_text += line
+    if output:
+        output.write( out_text )
