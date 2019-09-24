@@ -1,105 +1,69 @@
 #!/usr/bin/python3
 
 from argparse import ArgumentParser as Parser
-from TextAnalizer.dictionary import *
-from sys import stderr, stdin, argv
+from TextAnalizer import *
+import sys
 
-args = Parser(
-    description = "Search engine for terminal.",
-    prog = "Getter"
-)
+def show_documentation():
+    return 0
+def do_tmpl( _text, _conf, _item, _ind ):
+    chars = {
+        r'%r': search(_conf, _item),
+        r'%l': _item,
+        r'%ln': _ind,
+        }
 
-if not '-c' in argv and not '--config' in argv:
-    args.add_argument( 'pattern', help = 'Short pattern to search in text.', type = str )
-args.add_argument( '-c', '--config', help = "Yaml with the dictionary to search in text.", type = str )
-args.add_argument( '-f', '--file', help = "File with the code to translation.", type = str)
-args.add_argument( '-o', '--output', help = "File name where will write the output.", type = str )
-args.add_argument( '-l', '--lines', help = "Line interval (%li-%lf) where you want search. ", type = str )
-args.add_argument( '-s', '--search',
-                  help = "Just search on text",
-                  action = 'append_const',
-                  default = [],
-                  const = True
-)
-args.add_argument( '-d', '--detail',
-                  help = "Output (stdout) will be with detailed informations",
-                  action = 'append_const',
-                  default = [],
-                  const = True
-)
+    for c in chars:
+        text = REGEX.split( c, _text )
+        char = str( chars[c] )
+        _text = char.join(text)
+    return _text
 
-args = args.parse_args()
+def main():
+    args = Parser(
+        description = "Search engine for terminal.",
+        prog = "Getter"
+    )
 
-if len(args.detail)<1:
-    args.detail = [False]
-if len(args.search)<1:
-    args.search = [False]
+    if not '-c' in sys.argv and not '--config' in sys.argv:
+        args.add_argument( 'pattern', help = 'Short pattern to search in text.', type = str )
+    args.add_argument( '-c', '--config', help = "Yaml with the dictionary to search in text.", type = str )
+    args.add_argument( '-f', '--file', help = "File with the code to translation.", type = str)
+    args.add_argument( '-o', '--output', help = "File name where will write the output.", type = str )
+    args.add_argument( '-l', '--lines', help = "Line interval (%li-%lf) where you want search. ", type = str )
+    args.add_argument( '-t', '--template', help = "Output format", type = str )
+    args.add_argument( '-s', '--separate', help = "Separate char", type = str )
+    args.add_argument( '-b', '--break-char', help = "Break point char", type = str, dest = 'break_char' )
+    args.add_argument( '-d', '--documentation',
+                      help = "tutorial of template and config",
+                      action = 'store_true',
+                      default = False,
+    )
+    args = args.parse_args()
 
-config = args.config if args.config else args.pattern
-file = File(args.file) if args.file else None
-output = File( args.output ) if args.output else None
 
-lang = Dictionary( )
+    text = fopen(args.file).text if args.file else sys.stdin.read()
+    conf = args.config if args.config else '@c'+args.pattern
+    brea = args.break_char if args.break_char else '\n'
+    outp = fopen(args.output) if args.output else None
+    sepr = args.separate if args.separate else '\n'
+    docu = args.documentation
+    tmpl = args.template
+    patt = args.pattern
+    response = ''
 
-text = stdin.read()
+    if docu:
+        return show_documentation()
 
-variables = {}
-
-lines = {'i':0, 'f':len(text.strip().split('\n'))}
-if args.lines:
-    lines = {
-        'i': int(args.lines[:args.lines.index('-')].strip()),
-        'f': int(args.lines[args.lines.index('-')+1:].strip())
-    }
-
-if not args.search[0]:
-    ln = 1
-    for line in text.strip().split('\n'):
-        variables[ln] = {}
-        ln += 1
-
-    ln = 0
-    out_text = ''
-    for line in text.strip().split('\n'):
-        ln += 1
-
-        if ln >= lines['i'] and ln <= lines['f']:
-            vars = lang.get_vars( config, line.strip() )
-
-            if vars:
-                for var in vars:
-                    variables[ ln ][ var ] = vars[ var ]
-
-                if args.detail[0]:
-                    spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
-                    spc_v = spc_l + (' '*len(str(ln)))
-
-                    print ( ' ', spc_l, ln, ': "', line, '"\n', spc_v, vars, sep = '' )
-                    out_text += str({ 'line': { 'number': ln, 'text': line } , 'vars': variables[ ln ] })+'\n'
+    items = text.strip().split( brea )
+    for txt in range( len(items) ):
+        if search( patt, items[txt] ):
+            if tmpl:
+                response += ''.join(( replace( patt, tmpl, items[txt] ), sepr ))
             else:
-                variables.pop ( ln )
+                response += search( patt, items[txt] ) + sepr
+    print( response.strip() )
+    return 0
 
-    if not args.detail[0]:
-        print ( variables )
-        if output:
-            output.write( str( variables ) )
-    else:
-        if output:
-            output.write( out_text )
-else:
-    ln = 0
-    out_text = ''
-    for line in text.strip().split('\n'):
-        ln += 1
-
-        if ln >= lines['i'] and ln <= lines['f']:
-            if lang.check( config, line.strip() ):
-                if args.detail[0]:
-                    spc_l = ' '*(len(str(ln)) - len(str(len(text.split('\n')))))
-                    print ( ' ', spc_l, ln, ': "', line, '"')
-                    out_text += '{}: "{}"\n'.format(ln, line)
-                else:
-                    print ( line )
-                    out_text += line
-    if output:
-        output.write( out_text )
+if __name__=="__main__":
+    sys.exit( main() )
