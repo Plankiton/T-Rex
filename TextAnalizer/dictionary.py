@@ -23,9 +23,12 @@ class Dictionary:
         f = 0
         list_var = []
         while f <= len( _text ) and i < len( _text ):
-            if _text[i] == '%':
+            if _text[i] == '%' and _text[i-1] != '\\':
                 text_end = _text[i:]
                 if '&' in text_end:
+                    if '\\&' in text_end:
+                        if text_end.index('&') == text_end.index('\\&')+1:
+                            continue
                     f = text_end.index('&')+ i + 1
                 else:
                     continue
@@ -61,6 +64,13 @@ class Dictionary:
 
         return { 'templates': lvars, 'else_templates': elvars, 'pure_templates': plvars}
 
+    def regex(self, _patt):
+        regex = _patt
+        plvars = self.get_var_templates(_patt)['pure_templates']
+        for pure_var in plvars:
+            regex =  plvars [ pure_var ].join( regex.split(pure_var) )
+        return regex
+
     def get_vars (self, _key, _text ):
         def add_variable ( _variable, _name, _len_compl, _pos ):
 
@@ -82,16 +92,6 @@ class Dictionary:
         pos = 0
 
         # Confirming text pattern
-        if False:
-            regex = _key
-            for pure_var in plvars:
-                regex =  plvars [ pure_var ].join( regex.split(pure_var) )
-            result = REGEX.match(regex, _text.strip())
-            if result:
-                if result.group().strip() != _text.strip():
-                    return None
-            else:
-                return None
 
         while f < len(_key):
 
