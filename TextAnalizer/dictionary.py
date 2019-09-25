@@ -157,10 +157,25 @@ class Dictionary:
 
         return variable if variable != {} else None
 
-    def replace (self, _key = None, _rep = None, _text = None, _vars = None, _type = 'function' ):
+    def replace (self, _key = None, _rep = None, _text = None, _vars = None, _type = 'function', _abs = False ):
 
         replaced = _text
         atual_type = _type
+
+        if _abs:
+            replaced = _rep
+            variables = self.get_vars ( _key, replaced )
+            if _vars and variables:
+                for key in _vars:
+                    variables[key] = _vars[key]
+            elif _vars:
+                variables = _vars
+
+
+            if variables != None:
+                for var in variables:
+                    replaced = variables[var].join( replaced.split(var) )
+            return replaced
 
         # Processing replaces
         if _key and _rep and _text:
