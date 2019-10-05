@@ -1,5 +1,6 @@
 from .dictionary import *
 
+
 def translate(_str, _conf):
     return Dictionary(_conf).translate(_str)
 
@@ -16,3 +17,6 @@ def search(_patt, _text):
     regex = Dictionary().regex(_patt).strip()
     res = REGEX.search( regex, _text)
     return res.group() if res else None
+
+def get_vars(_patt, _text):
+    return Dictionary().get_vars(_patt, _text)

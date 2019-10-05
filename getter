@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 
-from argparse import ArgumentParser as Parser
-from TextAnalizer import *
 import sys
+from argparse import ArgumentParser as Parser
+
+from TextAnalizer import *
+
 
 def show_documentation():
     print(r'''
@@ -104,9 +106,15 @@ def main():
             dest = 'break_char'
             )
     args.add_argument( '-d', '--documentation',
-            help = "tutorial of template and config",
+            help = "documentation",
             action = 'store_true',
             default = False,
+            )
+    args.add_argument( '-v', '--show-variables',
+            help = "show a json with the variables",
+            action = 'store_true',
+            default = False,
+            dest = 'variables'
             )
     args = args.parse_args()
 
@@ -126,10 +134,14 @@ def main():
     for txt in range( len(items) ):
         items[txt] = items[txt].strip()
         if search( patt, items[txt] ):
-            if tmpl:
+            if args.variables:
+                print(
+                    get_vars( patt, items[txt] )
+                )
+            elif tmpl:
                 response += do_evals(
                         do_tmpl(
-                            ''.join(( replace( patt, tmpl, items[txt], True ), sepr )),
+                            ''.join(( replace( patt, tmpl, items[txt]), sepr )),
                             patt, items, txt
                             )
                         )

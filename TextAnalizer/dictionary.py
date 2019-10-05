@@ -1,5 +1,6 @@
 from .loader import *
 
+
 def debug ( *unargs,**args ):
     print()
     for arg in args:
@@ -161,21 +162,6 @@ class Dictionary:
 
         replaced = _text
         atual_type = _type
-
-        if _abs:
-            replaced = _rep
-            variables = self.get_vars ( _key, replaced )
-            if _vars and variables:
-                for key in _vars:
-                    variables[key] = _vars[key]
-            elif _vars:
-                variables = _vars
-
-
-            if variables != None:
-                for var in variables:
-                    replaced = variables[var].join( replaced.split(var) )
-            return replaced
 
         # Processing replaces
         if _key and _rep and _text:
