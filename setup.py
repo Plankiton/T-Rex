@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='TextAnalyzer',
     version='0.0.1',
-    description='A Text Analizer Utilities',
+    description='A Text Analyzer Utilities',
     author='RoboCopGay',
     author_email='vinicios.sousa909@gmail.com',
     url='https://github.com/RoboCopGay/TextAnalyzer',
