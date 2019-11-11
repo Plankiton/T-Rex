@@ -3,7 +3,7 @@
 import sys
 from argparse import ArgumentParser as Parser
 
-from TextAnalizer import *
+from textanalizer import *
 
 
 def show_documentation():

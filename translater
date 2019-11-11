@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from argparse import ArgumentParser as Parser
-from TextAnalizer.dictionary import *
+from textanalizer.dictionary import *
 from sys import stderr, stdin, argv
 
 args = Parser(
