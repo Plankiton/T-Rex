@@ -66,14 +66,14 @@ class Config:
             elif 'pattern' in _keys:
                 ptn = 'pattern'
             if (ptn == 'p') or (ptn == 'ptn') or (ptn == 'pattern'):
-                self.pattern = self.organize(_keys[ptn])
+                self.pattern = _keys[ptn]
                 self.name = _key
 
             if _keys:
 
                 for key in _keys:
                     if (key == 'f') or (key == 'fnc') or (key == 'function'):
-                        self.functions = self.organize(_keys[key])
+                        self.functions = _keys[key]
 
                     if (key == 'l') or (key == 'lcl') or (key == 'local'):
                         self.locals = self.Local( _keys[key] )
