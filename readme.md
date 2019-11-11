@@ -61,4 +61,4 @@ $ pip install git+http://github.com/RoboCopGay/TextAnalizer --user && getter -h 
 
 # Documentation
 
-If your want learn more about the TextAnalizer is just enter on [AnaLixerDocs](http://robocopgay.github.io/TextAnalizer).
+If your want learn more about the TextAnalizer is just enter on [TextAnalizerDocs](http://robocopgay.github.io/TextAnalizer).
