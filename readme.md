@@ -1,6 +1,6 @@
 # TextAnalizer
 
-![TextAnalizer banner](docs/assets/icon.light.png)
+![TextAnalizer banner](docs/assets/banner.png)
 
 The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.
 

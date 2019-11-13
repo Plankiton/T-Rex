@@ -47,4 +47,17 @@ $ echo "foosomething"| translater '"foo%complement&": "%complement&bar"'
 somethingbar
 ```
 
-The `%complement&` is a variable, and it have some attributes
+With the `translater` you too can search in a file:
+
+> file.txt
+
+```
+name Jack
+old 23
+```
+
+```sh
+
+```
+
+## Using "getter" tool
