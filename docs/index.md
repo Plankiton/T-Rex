@@ -29,7 +29,7 @@ $ echo "foo bar"| translater 'foo: bar'
 
 bar bar
 ```
-> The space(' ') after the ':' token is needed on translater.
+> The space(' ') after the ':' token is needed on `pattern` of translater.
 
 Or changing word before `bar` to `foo`:
 
@@ -47,7 +47,7 @@ $ echo "foosomething"| translater '"foo%complement&": "%complement&bar"'
 somethingbar
 ```
 
-With the `translater` you too can search in a file:
+With the `translater` you too can search in a file, is just use the `-f <file>`:
 
 > file.txt
 
@@ -57,7 +57,33 @@ old 23
 ```
 
 ```sh
+$ translater -f file.txt '"%key& %value&": "the %key& has the %value& value."'
 
+the name has the Jack value.
+the old has the 23 value.
+```
+
+And you too can use a file as `pattern` using the `-c` opition:
+
+> file.txt
+
+```
+hi, I am Brazilian.
+```
+
+> conf.yml
+
+```yaml
+hi: Oi
+I: eu
+am: sou
+Brazilian: Brasileiro
+```
+
+```sh
+$ translater -f file.txt -c conf.yml
+
+Oi, eu sou Brasileiro.
 ```
 
 ## Using "getter" tool
