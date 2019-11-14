@@ -185,7 +185,7 @@ The diferencial of TextAnalizer is the variable declarations:
 "%<variable>:<regex>&": ... # variable with custom regex
 ```
 
-### replace
+### replace:
 
 The key `replace` has the power of replace what did found by `pattern`, it have 4 forms of declaration:
 
@@ -246,13 +246,96 @@ The `end` key is used to delimit the action area:
 <pattern>:
     name: phrase
     end: endPhrase
+    replace: <replace>
 ```
 
-Or if you do'nt want create a secondary element:
+### local:
+
+The `local` key is the conjunt of elements that will change just between the current key and the `end` key:
 
 ```yaml
 <pattern>:
-    end:
-        pattern: <pattern>
-        replace: <replace>
+    name: endPhrase
+    replace: <replace>
+
+<pattern>:
+    name: phrase
+    end: endPhrase
+    replace: <replace>
+    local:
+        <pattern1>: <replace1>
+        <pattern2>: <replace2>
+        ...
+        <patternN>: <replaceN>
+        keywords:
+            <pattern1>: <replace1>
+            <pattern2>: <replace2>
+            ...
+            <patternN>: <replaceN>
 ```
+
+> the TextAnalizer will to replace on the order when the patterns did writed, but if one is sucessfull, the TextAnalizer will stop, and will to replace the `keywords`.
+
+But the most important is that all sub patterns of one element inherit the variables of the element.
+
+```yaml
+<pattern>:
+    name: endPhrase
+    replace: <replace>
+
+"command %name&":
+    name: phrase
+    end: endPhrase
+    replace: "%name&()"
+    local:
+        "%line:.{0,}&": "%line& of command %name&"
+```
+> This example do'nt make sense, i just want show how works the heritage.
+
+### childs:
+
+The `childs` key is like the patterns on `local`, but, them has all the attributes of one Element.
+
+```yaml
+<pattern>:
+    name: endPhrase
+    replace: <replace>
+
+<pattern>:
+    name: phrase
+    end: endPhrase
+    local:
+        <pattern>: <replace1>
+```
+
+And the heritage works with them too.
+
+
+```yaml
+<pattern>:
+    name: endPhrase
+    replace: <replace>
+
+"command %name&":
+    name: phrase
+    end: endPhrase
+    replace: "%name&()"
+    childs: [child_of_phase, child2]
+    local:
+        "%line:.{0,}&": "%line& of command %name&"
+
+<pattern>:
+    name: child2
+    replace: <replace>
+
+child_of_phase:
+    p: <pattern>
+    r: <replace>
+```
+
+> on yaml has 2 forms of represents a list (or array):
+> `[ item1, item2, ..., itemN]`
+>
+> `- item1`
+> `- item2`
+> `- itemN`

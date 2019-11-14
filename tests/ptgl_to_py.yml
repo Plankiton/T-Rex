@@ -9,11 +9,11 @@
   replace: '# variables'
   local:
     # matrizes
-    '%var?.{1,}&\:\ {0,}vetor\ {0,}\[%inLine?.{1,}&,%inCol?.{1,}&\]\ {0,}de\ {1,}%type?\w{1,}&': '%var& = [[%type&() for i in range( !{"%inCol&".strip()} )] for i in range( !{"%inLine&".strip()} )]'
+    '%var:.{1,}&\:\ {0,}vetor\ {0,}\[%inLine:.{1,}&,%inCol:.{1,}&\]\ {0,}de\ {1,}%type:\w{1,}&': '%var& = [[%type&() for i in range( !{"%inCol&".strip()} )] for i in range( !{"%inLine&".strip()} )]'
     # vetores
-    '%var?.{1,}&\:\ {0,}vetor\ {0,}\[%interval?.{1,}&\]\ {0,}de\ {1,}%type?\w{1,}&': '%var& = [%type&() for i in range( !{"%interval&".strip()} )]'
+    '%var:.{1,}&\:\ {0,}vetor\ {0,}\[%interval:.{1,}&\]\ {0,}de\ {1,}%type:\w{1,}&': '%var& = [%type&() for i in range( !{"%interval&".strip()} )]'
     # variaveis comuns
-    '%var?.{1,}&\:\ {0,}%type?\w{1,}&': '%var& = !{",".join(("%type&(),"*len("%var&".split(","))).split(","))}'
+    '%var:.{1,}&\:\ {0,}%type:\w{1,}&': '%var& = !{",".join(("%type&(),"*len("%var&".split(","))).split(","))}'
     keywords:
       caractere: str()
       caracter: str()
@@ -28,7 +28,7 @@
   name: begin
   end: end
   local:
-    '%var?\w{1,}&\ {0,}<-\ {0,}%val?.{1,}&': '!{"%var&".strip()} = %val&'
+    '%var:\w{1,}&\ {0,}<-\ {0,}%val:.{1,}&': '!{"%var&".strip()} = %val&'
 
 '^fim\w{0,}':
   name: end
@@ -41,7 +41,7 @@
    end: endswitch
    replace: 'if %expression&: # {'
 
-'^caso %value?.{1,}&':
+'^caso %value:.{1,}&':
    name: case
    replace: 'if %expression& == %value&: # {'
    end:
