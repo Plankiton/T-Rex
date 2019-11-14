@@ -20,7 +20,7 @@ $ pip install git+http://github.com/RoboCopGay/TextAnalizer --user && getter -h 
 
 # Getting started
 
-Before of you to begin with `TextAnalizer`, make sure you know [REGEX](https://en.wikipedia.org/wiki/Regular_expression).
+Before of you to begin with `TextAnalizer`, make sure if you know [REGEX](https://en.wikipedia.org/wiki/Regular_expression).
 
 Changing `"foo" to "bar"` on the text `"foo is bar"`:
 
@@ -118,7 +118,7 @@ Before of more nothing, the double quot (`"`) on yaml can interpret symbols like
 Exists basicaly 3 forms of to declare a element:
 
 ```yaml
-# compact form
+# short form
 <pattern>: <replace>
 
 # long forms
