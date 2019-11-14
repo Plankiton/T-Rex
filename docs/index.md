@@ -418,7 +418,11 @@ Other option is execute python comands to change response manually, is just writ
 example:
 
 ```sh
-$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{1}&" -b ';' -t '%name& -> !{ "%type".split() }'
+$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{1}&" -b ';' -t '%name& -> !{ "%type".split()*%p+1 }'
+
+t -> people
+s -> dogdog
+g -> catcatcat
 ```
 
 > The template too have a especial chars:
