@@ -207,10 +207,10 @@ The `replace` can show the variables:
 "%<var>:<re>&": "%<var>&"
 ```
 
-And it too can execute python commands expresseds on pattern:
+And it too can execute python commands expresseds on pattern using `!{<python command>}`:
 
 ```yaml
-'%number_of_letter:\d{1,}': ''
+'%number_of_letters:\d{1,}& %letter&': '!{ "%letter&"*%number_of_letters& }'
 ```
 
 ### name:
@@ -339,3 +339,89 @@ child_of_phase:
 > `- item1`
 > `- item2`
 > `- itemN`
+
+# Getter or translater?
+
+basicaly this documentation use just the `translater` to examples, but I did this because the `getter` is a tool most used to search things on files or output of commands, because of this I resolve show the diferences between them.
+
+## Translater
+
+
+### Positional arguments:
+
+| argument          | description                      |
+|-------------------|----------------------------------|
+| pattern           | Short pattern to search in text. |
+
+### Optional arguments:
+
+| argument                   | description                                   |
+|----------------------------|-----------------------------------------------|
+| -h, --help                 | show this help message and exit               |
+| -f FILE, --file FILE       | File with the code to translation.            |
+| -c CONFIG, --config CONFIG | Yaml with the dictionary for the translation. |
+| -o OUTPUT, --output OUTPUT | File name where will write the output.        |
+
+## Getter
+
+| argument          | description                      |
+|-------------------|----------------------------------|
+| pattern           | Short pattern to search in text. |
+
+### Optional arguments:
+
+| argument                                  | description                                   |
+|-------------------------------------------|-----------------------------------------------|
+| -h, --help                                | show this help message and exit               |
+| -f FILE, --file FILE                      | File with the code to translation.            |
+| -c CONFIG, --config CONFIG                | Yaml with the dictionary for the translation. |
+| -o OUTPUT, --output OUTPUT                | File name where will write the output.        |
+| -t TEMPLATE, --template TEMPLATE          | Output format                                 |
+| -s SEPARATE, --separate SEPARATE          | separate char to output                       |
+| -b BREACK_CHAR, --breack-char BREACK_CHAR | break char in the text input                  |
+
+is to change the output, in pattern you will write a regex and this regex will be used on "-t"
+
+example:
+
+```sh
+$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "people \w{1,}" -b ';' -t 'tony '
+
+tony stark
+```
+> The getter just replace the text did found by regex
+
+and in -t you can use variables, and him need be like this: "%<variable-name>&"
+
+```sh
+$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "%class& %name&" -b ';' -t '%name& is a %class&'
+
+tony is a people
+scoobydoo is a dog
+garfild is a cat
+```
+
+but always that you take a variable the getter use the regex "\w{1,}", if you need other regex is just insert a : in variable (%<variable-name>:<regex>&)
+
+example:
+
+```sh
+$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{,}&" -b ';' -t '%name& -> %type'
+
+tony stark is a people
+scoobydoo is a dog
+garfild is a cat
+```
+
+Other option is execute python comands to change response manually, is just write the commands between '!{' and '}'
+
+example:
+
+```sh
+$ echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{1}&" -b ';' -t '%name& -> !{ "%type".split() }'
+```
+
+> The template too have a especial chars:
+> - %r: response of the searched pattern
+> - %i: current item (text of item) from text splited by -b|--break-char
+> - %p: current item (number of item) from text splited by -b|--break-char
