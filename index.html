@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <meta http-equiv="Content-Language" content="en">
+        <title>TextAnalizer</title>
+        <link rel="shortcut icon" href="assets/icon.png" type="image/x-icon">
+
+        <link rel="stylesheet" href="docs/assets/markdown/github-markdown.css" type="text/css" media="all">
+        <link rel="stylesheet" href="docs/index.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/base16-light.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/default.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/github-markdown.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/material-icons.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/spell-checker.min.css" type="text/css" media="all">
+        <link rel=stylesheet" href="docs/assets/markdown/sweetalert.css" type="text/css" media="all">
+
+        <link rel="stylesheet" href="docs/index.css" type="text/css" media="all">
+
+    </head>
+    <body>
+        <div>
+            <header>
+                <h1>Yak's Vinicios Silva Souza</h1>
+                <p><strong>Email:</strong> vinicios.sousa909@gmail.com</p>
+                <p><strong>Phone:</strong> (63) 99235 - 8700</p>
+                <p><strong>Github:</strong> <a href="http://github.com/RoboCopGay" target="_blank">RoboCopGay</a></p>
+                <p><strong>instagram:</strong> <a href="http://instagram.com/_yaks.h" target="_blank">@_yaks.h</a></p>
+            </header>
+        </div>
+        <br/>
+        <section>
+            <div id="out" class="markdown-body">
+<p><img src="docs/assets/banner.png" alt="TextAnalizer banner"></p>
+<p>The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.</p>
+<blockquote>
+<p>Using "translater" tool</p>
+</blockquote>
+<p>Changing "foo" to "bar" on the text "foo bar":</p>
+<pre><code class="language-sh">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"foo bar"</span>| translater <span class="hljs-string">'foo: bar'</span>
+
+bar bar
+</code></pre>
+<blockquote>
+<p>The space(' ') after the ':' token is needed on translater.</p>
+</blockquote>
+<p>Or changing "foo%complement&amp;" to "%complement&amp;bar"</p>
+<pre><code class="language-sh">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"foosomething"</span>| translater <span class="hljs-string">'"foo%complement&amp;": "%complement&amp;bar"'</span>
+
+somethingbar
+</code></pre>
+<blockquote>
+<p>Using "getter" tool</p>
+</blockquote>
+<p>Or if you want search emails on any text using a regex ".{1,}@.{1,}":</p>
+<pre><code class="language-sh">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"j@gmail.com
+person@site.net
+some text to try confuse the getter
+email@g.com"</span> | getter <span class="hljs-string">".{1,}@.{1,}"</span>
+
+j@gmail.com
+person@site.net
+email@g.com
+</code></pre>
+<p>Or getting just the username of emails:</p>
+<pre><code class="language-sh">$ <span class="hljs-built_in">echo</span> <span class="hljs-string">"j@gmail.com
+person@site.net
+some text to try confuse the getter
+email@g.com"</span> | getter <span class="hljs-string">"%username:.{1,}&amp;@.{1,}"</span> -t <span class="hljs-string">"%username&amp;"</span>
+
+j
+person
+email
+</code></pre>
+<h2>Install</h2>
+<p>To install the textanalizer is just take this in a terminal:</p>
+<pre><code class="language-sh">$ pip install git+http://github.com/RoboCopGay/TextAnalizer --user &amp;&amp; getter -h &gt; /dev/null &amp;&amp; <span class="hljs-keyword">if</span> [[ <span class="hljs-string">"$?"</span>==<span class="hljs-number">0</span> ]];<span class="hljs-keyword">then</span> <span class="hljs-built_in">echo</span> <span class="hljs-string">'TextAnalizer are installed!!'</span>;<span class="hljs-keyword">fi</span>
+</code></pre>
+<h1>Documentation</h1>
+<p>If your want learn more about the TextAnalizer is just enter on <a href="http://robocopgay.github.io/TextAnalizer">TextAnalizerDocs</a>.</p>
+            </div>
+
+        <script src="docs/assets/markdown/markdown-it.js"></script>
+        <script src="docs/assets/markdown/markdown-it-footnote.js"></script>
+        <script src="docs/assets/markdown/highlight.pack.js"></script>
+        <script src="docs/assets/markdown/emojify.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/codemirror.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/overlay.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/xml/xml.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/markdown/markdown.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/gfm/gfm.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/javascript/javascript.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/css/css.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/htmlmixed/htmlmixed.js"></script>
+        <script src="docs/assets/markdown/codemirror/codemirror/util/continuelist.js"></script>
+        <script src="docs/assets/markdown/spell-checker.min.js"></script>
+        <script src="docs/assets/markdown/rawinflate.js"></script>
+        <script src="docs/assets/markdown/rawdeflate.js"></script>
+        <script src = "docs/assets/markdown/sweetalert.min.js"></script>
+        <script src="index.js"></script>
+
+
+        </section>
+        <br/>
+        <footer>
+            <p>
+                <strong>RoboCopGay.github.io</strong> &copy; Yak's Vinicios Silva Souza.
+            </p>
+        </footer>
+        <br/>
+    </body>
+</html>
