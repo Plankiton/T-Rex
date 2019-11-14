@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
         <meta http-equiv="Content-Language" content="en">
-        <title>TextAnalizer</title>
+        <title>TextAnalyzer</title>
         <link rel="shortcut icon" href="assets/icon.png" type="image/x-icon">
 
         <link rel="stylesheet" href="assets/markdown/github-markdown.css" type="text/css" media="all">
@@ -33,8 +33,8 @@
         <section>
             <div id="out" class="markdown-body">
 
-                <a href="http://github.com/RoboCopGay/TextAnalyzer"><img src="assets/banner.png" alt="TextAnalizer banner"></a>
-                <p>The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.</p>
+                <a href="http://github.com/RoboCopGay/TextAnalyzer"><img src="assets/banner.png" alt="TextAnalyzer banner"></a>
+                <p>The TextAnalyzer is a simple ultility for text analitics, your especiality is translate some text to other text.</p>
                 <h2>Install</h2>
                 <p>Verify if you <code>$PATH</code> variable has the directory <code>$HOME/.local/bin</code>, why is the local where the <code>pip</code> will save the executable files, if not take a next command and reload your desktop session to load the setting.</p>
                 <blockquote>
@@ -43,10 +43,10 @@
                 <pre><code class="language-sh">$ <span class="hlbuilt_in">echo</span> <span class="hlstring">'export PATH="$PATH:$HOME/.local/bin"'</span> &gt;&gt; .xprofile
                 </code></pre>
                 <p>And is just run the next command and done!</p>
-                <pre><code class="language-sh">$ pip install git+http://github.com/RoboCopGay/TextAnalizer --user &amp;&amp; getter -h &gt; /dev/null &amp;&amp; <span class="hlkeyword">if</span> [[ <span class="hlstring">"$?"</span>==<span class="hlnumber">0</span> ]];<span class="hlkeyword">then</span> <span class="hlbuilt_in">echo</span> <span class="hlstring">'TextAnalizer are installed!!'</span>;<span class="hlkeyword">fi</span>
+                <pre><code class="language-sh">$ pip install git+http://github.com/RoboCopGay/TextAnalyzer --user &amp;&amp; getter -h &gt; /dev/null &amp;&amp; <span class="hlkeyword">if</span> [[ <span class="hlstring">"$?"</span>==<span class="hlnumber">0</span> ]];<span class="hlkeyword">then</span> <span class="hlbuilt_in">echo</span> <span class="hlstring">'TextAnalyzer are installed!!'</span>;<span class="hlkeyword">fi</span>
                 </code></pre>
                 <h1>Getting started</h1>
-                <p>Before of you to begin with <code>TextAnalizer</code>, make sure if you know <a href="https://en.wikipedia.org/wiki/Regular_expression">REGEX</a>.</p>
+                <p>Before of you to begin with <code>TextAnalyzer</code>, make sure if you know <a href="https://en.wikipedia.org/wiki/Regular_expression">REGEX</a>.</p>
                 <p>Changing <code>"foo" to "bar"</code> on the text <code>"foo is bar"</code>:</p>
                 <blockquote>
                     <p>This is the basic syntax of one element: <code>'&lt;pattern&gt;: &lt;replace&gt;'</code>, but do'nt forget the space between <code>:</code> and <code>&lt;replace&gt;</code></p>
@@ -113,7 +113,7 @@ Brazilian: Brasileiro
 Oi, eu sou Brasileiro.
                 </code></pre>
                 <h2>The configuration file</h2>
-                <p>The configuration file is basicaly a <a href="http://yaml.org">yaml</a>, and can be used for <code>translater</code>, <code>getter</code> or some python code that use the TextAnalizer library.</p>
+                <p>The configuration file is basicaly a <a href="http://yaml.org">yaml</a>, and can be used for <code>translater</code>, <code>getter</code> or some python code that use the TextAnalyzer library.</p>
                 <pre><code class="language-yaml">'my name is %name&amp;': 'hello %name&amp;!'
 hi: hello
                 </code></pre>
@@ -171,7 +171,7 @@ hi: hello
 
 '.{0,}@.{0,}': ...
                 </code></pre>
-                <p>The diferencial of TextAnalizer is the variable declarations:</p>
+                <p>The diferencial of TextAnalyzer is the variable declarations:</p>
                 <pre><code class="language-yaml">"%&lt;variable&gt;&amp;": ...     # variables for default has "\w{1,}" as regex
 "%&lt;variable&gt;:&lt;regex&gt;&amp;": ... # variable with custom regex
                 </code></pre>
@@ -243,7 +243,7 @@ hi: hello
             &lt;patternN&gt;: &lt;replaceN&gt;
                 </code></pre>
                 <blockquote>
-                    <p>the TextAnalizer will to replace on the order when the patterns did writed, but if one is sucessfull, the TextAnalizer will stop, and will to replace the <code>keywords</code>.</p>
+                    <p>the TextAnalyzer will to replace on the order when the patterns did writed, but if one is sucessfull, the TextAnalyzer will stop, and will to replace the <code>keywords</code>.</p>
                 </blockquote>
                 <p>But the most important is that all sub patterns of one element inherit the variables of the element.</p>
                 <pre><code class="language-yaml">&lt;pattern&gt;:
