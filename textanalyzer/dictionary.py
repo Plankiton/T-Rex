@@ -451,9 +451,8 @@ class Dictionary:
             if atual_key.name in local_variables:
                 for local in local_variables [ atual_key.name ]:
                     lines = self.do_local_functions(atual_key, local, lines, local_variables)
-            else:
-                # Doing global functions
-                lines = self.do_functions( atual_key, lines)
+            # Doing global functions
+            lines = self.do_functions( atual_key, lines)
 
         # Doing evals in replaces
         for ln in range( len( lines ) ):
