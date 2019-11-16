@@ -21,8 +21,15 @@ class Dictionary:
 
 
     def get_var_templates (self, _text ):
-        list_var = REGEX.findall(r'[\?<].{,}[\?>]', _text)
-        text_splited = REGEX.split(r'[\?<].{,}[\?>]', _text)
+        _text = r'\{tagquot}'.join(_text.split(r'\<'))
+        _text = r'\{tagendquot}'.join(_text.split(r'\>'))
+
+        regex = r'[\?<]\w{1,}[:]{0,1}.{,}[\?>]'
+        list_var = REGEX.findall(regex, _text)
+        text_splited = REGEX.split(regex, _text)
+
+        _text = '\<'.join(_text.split(r'\{tagquot}'))
+        _text = '\>'.join(_text.split(r'\{tagquot}'))
 
         lvars = {}
         plvars = {}
