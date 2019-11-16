@@ -14,7 +14,7 @@ def do_evals( _text ):
     return Dictionary().do_evals( _text )
 
 def search(_patt, _text):
-    regex = Dictionary().regex(_patt).strip()
+    regex = Dictionary().get_pattern_regex(_patt).strip()
     res = REGEX.search( regex, _text)
     return res.group() if res else None
 
