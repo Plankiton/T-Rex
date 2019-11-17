@@ -47,10 +47,12 @@ class Dictionary:
 
             else:
                 # Geting list of variables with pattern on key of Config
-                var_name = var [ 1 : var.index(':') ].strip()
-                var_patt = var[ var.index(':')+1 : var.rindex('>') ].strip()
+                var_name = REGEX.match(r'\w{1,}:', var[1:]).group()
+                var_name = '<'+var_name[:len(var_name)-1]+'>'
 
-                var_name = "<{}>".format(var_name)
+                var_patt = REGEX.match(r':.{1,}', var[1:]).group()
+                var_patt = var_patt[1:len(var_name)-1]
+
                 lvars = {'name':var_name, 'patt':var_patt}
 
             plvars = {'name':var, 'patt':lvars['patt']}
@@ -71,13 +73,6 @@ class Dictionary:
         return regex
 
     def get_vars (self, _key, _text ):
-        def add_variable ( _variable, _name, _len_compl, _pos ):
-
-            _variable [ _name ] = _variable [ _name ].group()
-            _variable [ _name ] = _variable[ _name ][:len(_variable [ _name ])-_len_compl]
-            _pos += len( _variable [ _name ] )+1
-
-            return _variable, _name, _len_compl, _pos
 
         lvars = self.get_var_templates(_key)['templates']
         plvars = self.get_var_templates(_key)['pure_templates']
@@ -92,7 +87,11 @@ class Dictionary:
             if found:
                 text_found = found.group()
                 var_value_begin = len(atual_text)
-                var_value_end = var_value_begin+_text[var_value_begin:].rindex(texts[i+1])
+                var_value_end = var_value_begin
+
+                end_response = REGEX.match(''.join(texts[i+1:]) ,
+                                           _text[:var_value_begin-1:-1]).group()
+                var_value_end += _text[var_value_begin:].rindex(end_response)
                 var_value = _text[var_value_begin:var_value_end]
 
                 variables[lvars[i]['name']] = var_value
