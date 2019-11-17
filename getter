@@ -29,18 +29,29 @@ def show_documentation():
     example:
         echo "people tony stark;dog scoobydoo;cat garfild" | getter "people \w{1,}" -b ';' -t 'people hawk stark'
 
-    and in -t you can use variables, and him need be like this: "%<variable-name>&"
-        echo "people tony stark;dog scoobydoo;cat garfild" | getter "people %name&" -b ';' -t '%name&'
+    and in -t you can use variables, and him need be like this: "<variable-name>"
+        echo "people tony stark;dog scoobydoo;cat garfild" | getter "people <name>" -b ';' -t '<name>'
 
+<<<<<<< HEAD
     but always that you take a variable the getter use the regex "\w{1,}", if you need other regex is just insert a : in variable (%<variable-name>:<regex>&)
 
     example:
         echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{1}&" -b ';' -t '%name& -> %type'
+=======
+    but always that you take a variable the getter use the regex "\w{1,}", if you need other regex is just insert a ? in variable (<variable-name>?<regex>)
+
+    example:
+        echo "people tony stark;dog scoobydoo;cat garfild" | getter "<type> <name?.{1}>" -b ';' -t '<name> -> <type'
+>>>>>>> varTemplates
 
     Other option is execute python comands to change response manually, is just write the commands between '!{' and '}'
 
     example:
+<<<<<<< HEAD
         echo "people tony stark;dog scoobydoo;cat garfild" | getter "%type& %name:.{1}&" -b ';' -t '%name& -> !{ "%type".split() }'
+=======
+        echo "people tony stark;dog scoobydoo;cat garfild" | getter "<type> <name?.{1}>" -b ';' -t '<name> -> !{ "<type".split() }'
+>>>>>>> varTemplates
 
     Too have a especial chars:
         %r: response of the searched pattern
@@ -48,6 +59,8 @@ def show_documentation():
         %p: current item (number of item) from text splited by -b|--break-char
 '''.strip())
     return 0
+
+
 def do_tmpl( _text, _conf, _items, _ind ):
     chars = {
         r'%r': search(_conf, _items[_ind]),
@@ -128,9 +141,7 @@ def main():
         items[txt] = items[txt].strip()
         if search( patt, items[txt] ):
             if args.variables:
-                print(
-                    get_vars( patt, items[txt] )
-                )
+                print(get_vars( patt, items[txt] ))
             elif tmpl:
                 response += do_evals(
                         do_tmpl(
