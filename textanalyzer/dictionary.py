@@ -1,20 +1,5 @@
 from .loader import *
 
-
-def fix_scape(_text, isout=True):
-    if not isout:
-        _text = '<_scape%/>'.join(_text.split(r'\%'))
-        _text = '<_scape&/>'.join(_text.split(r'\&'))
-        _text = '<_scape?/>'.join(_text.split(r'\?'))
-        _text = '<_scape:/>'.join(_text.split(r'\:'))
-    else:
-        _text = '%'.join(_text.split('<_scape%/>'))
-        _text = '&'.join(_text.split('<_scape&/>'))
-        _text = ':'.join(_text.split('<_scape:/>'))
-        _text = r'\?'.join(_text.split('<_scape?/>'))
-    return _text
-
-
 def debug ( *unargs,**args ):
     print()
     for arg in args:
@@ -36,55 +21,53 @@ class Dictionary:
 
 
     def get_var_templates (self, _text ):
-        i = 0
-        f = 0
-        list_var = []
+        _text = r'\{tagquot}'.join(_text.split(r'\<'))
+        _text = r'\{tagendquot}'.join(_text.split(r'\>'))
 
-        _text = fix_scape(_text)
-        while f <= len( _text ) and i < len( _text ):
-            if _text[i] == '%':
-                text_end = _text[i:]
-                if '&' in text_end:
-                    f = text_end.index('&')+ i + 1
-                else:
-                    continue
-                list_var.append(_text[i:f])
-            i += 1
-        _text = fix_scape(_text, 1)
+        regex = r'[\?<]\w{1,}[:]{0,1}.{,}[\?>]'
+        list_var = REGEX.findall(regex, _text)
+        text_splited = REGEX.split(regex, _text)
+
+        _text = '\<'.join(_text.split(r'\{tagquot}'))
+        _text = '\>'.join(_text.split(r'\{tagquot}'))
 
         lvars = {}
-        elvars = {}
         plvars = {}
+
+        listlvars = []
+        listplvars = []
 
         # Geting list of variables
         for var in list_var:
-            var_patt = r'''p\w{1,}'''
+            var_patt = r'''\w{1,}'''
             var_name = var.strip()
 
             if not ':' in var:
-                lvars [ "{}".format(var_name) ] = var_patt
+                lvars = {'name':var_name, 'patt':var_patt}
 
             else:
                 # Geting list of variables with pattern on key of Config
                 var_name = var [ 1 : var.index(':') ].strip()
-                var_patt = var [ var.index(':')+1 : var.rindex('&') ].strip()
+                var_patt = var[ var.index(':')+1 : var.rindex('>') ].strip()
 
-                if '!' in var_patt :
-                    elvars [ "%{}".format(var_name) ] = ' '+var_patt[ :var_patt.rindex('!') ]
-                    var_patt = var_patt[ var_patt.rindex('!'): ].strip()
+                var_name = "<{}>".format(var_name)
+                lvars = {'name':var_name, 'patt':var_patt}
 
-                var_name = "%{}&".format(var_name)
-                lvars [ var_name ] = ' '+var_patt
+            plvars = {'name':var, 'patt':lvars['patt']}
 
-            plvars[var] = lvars[var_name][1:]
+            listplvars.append(plvars)
+            listlvars.append(lvars)
 
-        return { 'templates': lvars, 'else_templates': elvars, 'pure_templates': plvars}
+            plvars = {}
+            lvars = {}
 
-    def regex(self, _patt):
+        return { 'templates': listlvars, 'pure_templates': listplvars, 'text': text_splited}
+
+    def get_pattern_regex(self, _patt):
         regex = _patt
         plvars = self.get_var_templates(_patt)['pure_templates']
         for pure_var in plvars:
-            regex =  plvars [ pure_var ].join( regex.split(pure_var) )
+            regex =  pure_var['patt'].join( regex.split(pure_var['name']) )
         return regex
 
     def get_vars (self, _key, _text ):
@@ -96,82 +79,27 @@ class Dictionary:
 
             return _variable, _name, _len_compl, _pos
 
-
         lvars = self.get_var_templates(_key)['templates']
-        elvars = self.get_var_templates(_key)['else_templates']
         plvars = self.get_var_templates(_key)['pure_templates']
+        texts = self.get_var_templates(_key)['text']
 
-        variable = {}
+        variables = {}
+        for i in range(len(texts)-1):
+            atual_text = ''.join(texts[:i+1])
+            regex = atual_text+lvars[i]['patt']+texts[i+1]
 
-        i = 0
-        f = 0
-        pos = 0
+            found = REGEX.match(regex, _text)
+            if found:
+                text_found = found.group()
+                var_value_begin = len(atual_text)
+                var_value_end = var_value_begin+_text[var_value_begin:].rindex(texts[i+1])
+                var_value = _text[var_value_begin:var_value_end]
 
-        # Confirming text pattern
+                variables[lvars[i]['name']] = var_value
 
-        while f < len(_key):
+            texts.insert(i+1, lvars[i] )
 
-            if _key[f] == '%':
-
-                k = _key [f:]
-                lenght = len ( k [ : k.index('&')+1 ].strip() )
-
-                # Geting variables name
-                name = k [: k.index('&')+1].strip()
-
-                # Adapting regex
-                compl = ''
-                len_compl = 0
-                if ':' in name:
-                    if k.index('&')+1 < len(k):
-                        compl = k[ k.index('&')+1 ]
-                        if compl == '\\':
-                            compl += k[ k.index('&')+2 ]
-                        len_compl = 1
-
-                regex = _key[:f].lstrip()
-                for pure_var in plvars:
-                    regex =  plvars [ pure_var ].join( regex.split(pure_var) )
-
-                # confirming variable position
-                result = REGEX.match( regex, _text.strip() )
-
-                # Adapting text
-                if ':' in name:
-                    name = REGEX.search(r'%\w{1,}:', name).group()
-                    name = name[:len(name)-1]+'&'
-
-                # Positioning
-
-                # Geting variables values
-
-                if result:
-                    pos = len( result.group() )
-                else:
-                    f += 1
-                    continue
-
-                # Case pattern in end and value of pattern is the default
-                if lvars [ name ][0] == 'p':
-                    lvars [ name ] = r'\w{1,}'
-
-                # Case pattern in end
-                elif name in elvars:
-                    lvars [ name ] = elvars [ name ]
-
-                lvars [ name ] = lvars [ name ].strip()
-
-                # Getting variable...
-                variable [ name ] = REGEX.match( lvars [ name ]+compl, _text[pos:].strip() )
-
-                if variable [ name ]:
-                    variable, name, len_compl, pos = add_variable(variable, name, len_compl, pos)
-                else:
-                    variable.pop(name)
-
-            f += 1
-
-        return variable if variable != {} else None
+        return variables if variables != {} else None
 
     def replace (self, _key = None, _rep = None, _text = None, _vars = None, _type = 'function', _abs = False ):
 
@@ -181,7 +109,7 @@ class Dictionary:
         # Processing replaces
         if _key and _rep and _text:
 
-            if ( REGEX.search(r'\%\w{1,}\&', _key) is None ):
+            if ( REGEX.search(r'\<\w{1,}\>', _key) is None ):
                 regex = REGEX.compile(_key)
                 i = 0
                 while i < ( len( replaced ) ):
@@ -208,13 +136,6 @@ class Dictionary:
                     replaced = variables[var].join( replaced.split(var) )
 
         return replaced
-
-    # Add list of variables to a list of variables
-    def add_vars ( self, _dic_ini = {}, _dic_end = {} ):
-        if _dic_end:
-            for key in _dic_end:
-                _dic_ini[key] = _dic_end[key]
-        return _dic_ini
 
     # Check if the key is in text
     def check ( self, _key = None, _text = None ):
@@ -451,8 +372,9 @@ class Dictionary:
             if atual_key.name in local_variables:
                 for local in local_variables [ atual_key.name ]:
                     lines = self.do_local_functions(atual_key, local, lines, local_variables)
-            # Doing global functions
-            lines = self.do_functions( atual_key, lines)
+            else:
+                # Doing global functions
+                lines = self.do_functions( atual_key, lines)
 
         # Doing evals in replaces
         for ln in range( len( lines ) ):
