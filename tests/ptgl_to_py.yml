@@ -3,17 +3,17 @@
   off: '\}$'
 
 # estrutura básica
-'^alg\w{0,}\ "%name&"': 'if __name__ == "__main__": # %name& {'
+'^alg\w{0,}\ "<name>"': 'if __name__ == "__main__": # <name> {'
 
 '^var':
   replace: '# variables'
   local:
     # matrizes
-    '%var:.{1,}&\:\ {0,}vetor\ {0,}\[%inLine:.{1,}&,%inCol:.{1,}&\]\ {0,}de\ {1,}%type:\w{1,}&': '%var& = [[%type&() for i in range( !{"%inCol&".strip()} )] for i in range( !{"%inLine&".strip()} )]'
+    '<var:.{1,}>\:\ {0,}vetor\ {0,}\[<inLine:.{1,}>,<inCol:.{1,}>\]\ {0,}de\ {1,}<type:\w{1,}>': '<var> = [[<type>() for i in range( !{"<inCol>".strip()} )] for i in range( !{"<inLine>".strip()} )]'
     # vetores
-    '%var:.{1,}&\:\ {0,}vetor\ {0,}\[%interval:.{1,}&\]\ {0,}de\ {1,}%type:\w{1,}&': '%var& = [%type&() for i in range( !{"%interval&".strip()} )]'
+    '<var:.{1,}>\:\ {0,}vetor\ {0,}\[<interval:.{1,}>\]\ {0,}de\ {1,}<type:\w{1,}>': '<var> = [<type>() for i in range( !{"<interval>".strip()} )]'
     # variaveis comuns
-    '%var:.{1,}&\:\ {0,}%type:\w{1,}&': '%var& = !{",".join(("%type&(),"*len("%var&".split(","))).split(","))}'
+    '<var:.{1,}>\:\ {0,}<type:\w{1,}>': '<var> = !{",".join(("<type>(),"*len("<var>".split(","))).split(","))}'
     keywords:
       caractere: str()
       caracter: str()
@@ -28,25 +28,25 @@
   name: begin
   end: end
   local:
-    '%var:\w{1,}&\ {0,}<-\ {0,}%val:.{1,}&': '!{"%var&".strip()} = %val&'
+    '<var:\w{1,}>\ {0,}<-\ {0,}<val:.{1,}>': '!{"<var>".strip()} = <val>'
 
 '^fim\w{0,}':
   name: end
   replace: '# }'
 
 # Escolha.. caso.. outro caso
-'^escolha %expression&':
+'^escolha <expression>':
    name: switch
    childs: [ case, default]
    end: endswitch
-   replace: 'if %expression&: # {'
+   replace: 'if <expression>: # {'
 
-'^caso %value:.{1,}&':
+'^caso <value:.{1,}>':
    name: case
-   replace: 'if %expression& == %value&: # {'
+   replace: 'if <expression> == <value>: # {'
    end:
       name: case
-      replace: "# }\nelif %expression& == %value&: # {"
+      replace: "# }\nelif <expression> == <value>: # {"
 
 '^outro caso' :
    name: default
@@ -57,4 +57,4 @@
    replace: '# }'
 
 # for
-'para %var& de %ini& ate %fim& faca': 'for %var& in range(%ini&, %fim&): # {'
+'para <var> de <ini> ate <fim> faca': 'for <var> in range(<ini>, <fim>): # {'
