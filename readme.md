@@ -1,6 +1,6 @@
 # TextAnalyzer
 
-![TextAnalyzer banner](docs/assets/banner.png)
+![TextAnalyzer - by RoboCopGay](docs/assets/banner.png)
 
 The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.
 
@@ -61,4 +61,4 @@ $ pip install git+http://github.com/RoboCopGay/TextAnalyzer --user && getter -h 
 
 # Documentation
 
-If your want learn more about the TextAnalyzer is just enter on [TextAnalyzerDocs](http://robocopgay.github.io/TextAnalyzer).
+If your want learn more about the TextAnalyzer is just enter on [TextAnalyzerDocs](http://robocopgay.github.io/TextAnalyzer/docs).
