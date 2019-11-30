@@ -1,6 +1,6 @@
-# TextAnalizer
+# TextAnalyzer
 
-![TextAnalizer banner](docs/assets/banner.png)
+![TextAnalyzer banner](docs/assets/banner.png)
 
 The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.
 
@@ -53,12 +53,12 @@ email
 
 ## Install
 
-To install the textanalizer is just take this in a terminal:
+To install the textanalyzer is just take this in a terminal:
 
 ```sh
-$ pip install git+http://github.com/RoboCopGay/TextAnalizer --user && getter -h > /dev/null && if [[ "$?"==0 ]];then echo 'TextAnalizer are installed!!';fi
+$ pip install git+http://github.com/RoboCopGay/TextAnalyzer --user && getter -h > /dev/null && if [[ "$?"==0 ]];then echo 'TextAnalyzer are installed!!';fi
 ```
 
 # Documentation
 
-If your want learn more about the TextAnalizer is just enter on [TextAnalizerDocs](http://robocopgay.github.io/TextAnalyzer).
+If your want learn more about the TextAnalyzer is just enter on [TextAnalyzerDocs](http://robocopgay.github.io/TextAnalyzer).
