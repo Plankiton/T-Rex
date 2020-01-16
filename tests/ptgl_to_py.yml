@@ -56,5 +56,7 @@
    name: endswitch
    replace: '# }'
 
+'escreva': 'print'
+
 # for
 'para <var> de <ini> ate <fim> faca': 'for <var> in range(<ini>, <fim>): # {'
