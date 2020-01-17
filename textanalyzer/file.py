@@ -1,22 +1,67 @@
-from os import sep as ossepbar
 class File:
-    def __init__ (self, _file = None):
-        self.dir = '.'
-        self.text = ''
-        self.filename = _file
-        self.object = None
+    r'''
+    A abstraction for manipulation of files
+    '''
 
-        if _file:
+    def __init__(self, dir:str = None, text:str = None):
+        self.text = text
+        self.dir = dir
 
-            try:
-                self.text = open ( _file, 'r' ).read()
-            except:
-                self.object = open( _file, 'w' )
+        self.load(self.dir)
 
-            if ossepbar in _file:
-                self.dir = _file[: _file.rindex(ossepbar)]
-                self.filename = _file[ _file.rindex(ossepbar)+1:]
 
-    def write (self, text):
-        self.object = open( '{}/{}'.format( self.dir, self.filename ) , 'w' )
-        self.object.write( text )
+    def open(self, dir:str):
+        r'''
+        recev a <dir> and open the file, if it do not exists, this functio will to create.
+
+        params:
+            dir:str -> directory of the file
+
+        example:
+            <File>.load('/etc/hosts')
+        '''
+
+        self.dir = dir.strip()
+
+        try:
+            file = open(self.dir)
+            self.text = file.read()
+            file.close()
+
+        except (FileNotFoundError, IOError):
+            file = open(self.dir, 'w')
+            self.text = ''
+            file.close()
+
+    def __str__(self) -> str:
+        return f'<File: {self.dir}>'
+
+
+    def get_text(self) -> str:
+        r'''
+        this function returns the file text
+
+        example:
+            <File>.load('/etc/hosts')
+            file_text = <File>.get_text()
+        '''
+
+        return self.text
+
+    def write(self, text:str, append_mode:bool = False):
+        r'''
+        write the <text> on file
+
+        params:
+            text:str -> the text that you want to put on file
+            append_mode:bool -> if it is False, the text from file is replaced by <text>
+        '''
+        if not append_mode:
+            file = open(self.dir, 'w')
+            file.write(text)
+            file.close()
+        else:
+            file = open(self.dir, 'w')
+            file.write(r'{self.text}{text}')
+            file.close()
+
