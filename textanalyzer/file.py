@@ -7,7 +7,25 @@ class File:
         self.text = text
         self.dir = dir
 
-        self.load(self.dir)
+        self.open(self.dir)
+
+
+    def __str__(self) -> str:
+        return f'<File: {self.dir}>'
+
+
+    def __call__(self, dir:str):
+        r'''
+        recev a <dir> and open the file, if it do not exists, this functio will to create.
+
+        params:
+            dir:str -> directory of the file
+
+        example:
+            <File>.load('/etc/hosts')
+        '''
+
+        self.open(dir)
 
 
     def open(self, dir:str):
@@ -33,9 +51,6 @@ class File:
             self.text = ''
             file.close()
 
-    def __str__(self) -> str:
-        return f'<File: {self.dir}>'
-
 
     def get_text(self) -> str:
         r'''
@@ -56,6 +71,7 @@ class File:
             text:str -> the text that you want to put on file
             append_mode:bool -> if it is False, the text from file is replaced by <text>
         '''
+
         if not append_mode:
             file = open(self.dir, 'w')
             file.write(text)
