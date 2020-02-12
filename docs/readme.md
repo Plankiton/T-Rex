@@ -1,4 +1,4 @@
-# TextAnalyzer
+# TextAnalyzer Documentation
 
 The TextAnalyzer is a simple ultility for text analitics, your especiality is translate some text to other text.
 
