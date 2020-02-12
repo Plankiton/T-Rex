@@ -1,6 +1,6 @@
-# TextAnalizer
+# TextAnalyzer
 
-The TextAnalizer is a simple ultility for text analitics, your especiality is translate some text to other text.
+The TextAnalyzer is a simple ultility for text analitics, your especiality is translate some text to other text.
 
 ## Install
 
@@ -15,12 +15,12 @@ $ echo 'export PATH="$PATH:$HOME/.local/bin"' >> .xprofile
 And is just run the next command and done!
 
 ```sh
-$ pip install git+http://github.com/RoboCopGay/TextAnalizer --user && getter -h > /dev/null && if [[ "$?"==0 ]];then echo 'TextAnalizer are installed!!';fi
+$ pip install git+http://github.com/RoboCopGay/TextAnalyzer --user && getter -h > /dev/null && if [[ "$?"==0 ]];then echo 'TextAnalyzer are installed!!';fi
 ```
 
 # Getting started
 
-Before of you to begin with `TextAnalizer`, make sure if you know [REGEX](https://en.wikipedia.org/wiki/Regular_expression).
+Before of you to begin with `TextAnalyzer`, make sure if you know [REGEX](https://en.wikipedia.org/wiki/Regular_expression).
 
 Changing `"foo" to "bar"` on the text `"foo is bar"`:
 
@@ -106,7 +106,7 @@ Oi, eu sou Brasileiro.
 
 ## The configuration file
 
-The configuration file is basicaly a [yaml](http://yaml.org), and can be used for `translater`, `getter` or some python code that use the TextAnalizer library.
+The configuration file is basicaly a [yaml](http://yaml.org), and can be used for `translater`, `getter` or some python code that use the TextAnalyzer library.
 
 ```yaml
 'my name is %name&': 'hello %name&!'
@@ -178,7 +178,7 @@ foo: ...
 '.{0,}@.{0,}': ...
 ```
 
-The diferencial of TextAnalizer is the variable declarations:
+The diferencial of TextAnalyzer is the variable declarations:
 
 ```yaml
 "%<variable>&": ...     # variables for default has "\w{1,}" as regex
@@ -274,7 +274,7 @@ The `local` key is the conjunt of elements that will change just between the cur
             <patternN>: <replaceN>
 ```
 
-> the TextAnalizer will to replace on the order when the patterns did writed, but if one is sucessfull, the TextAnalizer will stop, and will to replace the `keywords`.
+> the TextAnalyzer will to replace on the order when the patterns did writed, but if one is sucessfull, the TextAnalyzer will stop, and will to replace the `keywords`.
 
 But the most important is that all sub patterns of one element inherit the variables of the element.
 
