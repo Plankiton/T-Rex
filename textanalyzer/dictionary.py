@@ -13,6 +13,8 @@ def debug ( *unargs,**args ):
 
 
 class Dictionary:
+    var_template = REGEX.compile(r'(\\{,}<)(\w{,}):{,1}(.{,}?)>')
+    rvar_template = REGEX.compile(r'<\w{,}:{,1}.{,}?>|(\\<\w{,}:{,1}.{,}?\\>)')
     def __init__ (self, _conf = None):
         if _conf:
             if '@c' in _conf [ :2 ]:
@@ -20,142 +22,51 @@ class Dictionary:
             else:
                 self.config = Config(_conf)
 
-
-    def get_var_templates (self, _text ):
-        i = 0
-        f = 0
-        list_var = []
-
-        while f <= len( _text ) and i < len( _text ):
-            if _text[i] == '%':
-                text_end = _text[i:]
-                if '&' in text_end:
-                    f = text_end.index('&')+ i + 1
-                else:
-                    continue
-                list_var.append(_text[i:f])
-            i += 1
-
-        lvars = {}
-        elvars = {}
-        plvars = {}
-
-        # Geting list of variables
-        for var in list_var:
-            var_patt = r'''p\w{1,}'''
-            var_name = var.strip()
-
-            if not ':' in var:
-                lvars [ "{}".format(var_name) ] = var_patt
-
+    def merge (self, l1, l2):
+        c = 0
+        for i in l1:
+            if i:
+                yield i
             else:
-                # Geting list of variables with pattern on key of Config
-                var_name = var [ 1 : var.index(':') ].strip()
-                var_patt = var [ var.index(':')+1 : var.rindex('&') ].strip()
+                yield l2[c]
+                c += 1
 
-                if '!' in var_patt :
-                    elvars [ "%{}".format(var_name) ] = ' '+var_patt[ :var_patt.rindex('!') ]
-                    var_patt = var_patt[ var_patt.rindex('!'): ].strip()
-
-                var_name = "%{}&".format(var_name)
-                lvars [ var_name ] = ' '+var_patt
-
-            plvars[var] = lvars[var_name][1:]
-
-        return { 'templates': lvars, 'else_templates': elvars, 'pure_templates': plvars}
-
-    def regex(self, _patt):
-        regex = _patt
-        plvars = self.get_var_templates(_patt)['pure_templates']
-        for pure_var in plvars:
-            regex =  plvars [ pure_var ].join( regex.split(pure_var) )
-        return regex
-
-    def get_vars (self, _key, _text ):
-        def add_variable ( _variable, _name, _len_compl, _pos ):
-
-            _variable [ _name ] = _variable [ _name ].group()
-            _variable [ _name ] = _variable[ _name ][:len(_variable [ _name ])-_len_compl]
-            _pos += len( _variable [ _name ] )+1
-
-            return _variable, _name, _len_compl, _pos
-
-
-        lvars = self.get_var_templates(_key)['templates']
-        elvars = self.get_var_templates(_key)['else_templates']
-        plvars = self.get_var_templates(_key)['pure_templates']
-
-        variable = {}
+    def get_vars (self, _patt, _text ):
+        def remove(l, c):
+            for i in l:
+                if i != c:
+                    yield i
 
         i = 0
-        f = 0
-        pos = 0
+        var_templates = self.var_template.findall(_patt)
+        context_list = list(remove(self.rvar_template.split(_patt), ''))
 
-        # Confirming text pattern
+        text_template = list(self.merge(context_list, var_templates))
 
-        while f < len(_key):
-
-            if _key[f] == '%':
-
-                k = _key [f:]
-                lenght = len ( k [ : k.index('&')+1 ].strip() )
-
-                # Geting variables name
-                name = k [: k.index('&')+1].strip()
-
-                # Adapting regex
-                compl = ''
-                len_compl = 0
-                if ':' in name:
-                    if k.index('&')+1 < len(k):
-                        compl = k[ k.index('&')+1 ]
-                        if compl == '\\':
-                            compl += k[ k.index('&')+2 ]
-                        len_compl = 1
-
-                regex = _key[:f].lstrip()
-                for pure_var in plvars:
-                    regex =  plvars [ pure_var ].join( regex.split(pure_var) )
-
-                # confirming variable position
-                result = REGEX.match( regex, _text.strip() )
-
-                # Adapting text
-                if ':' in name:
-                    name = REGEX.search(r'%\w{1,}:', name).group()
-                    name = name[:len(name)-1]+'&'
-
-                # Positioning
-
-                # Geting variables values
-
-                if result:
-                    pos = len( result.group() )
+        variables = {}
+        for r in range(len(text_template)):
+            regex = ''
+            if type(text_template[r]) == tuple:
+                if text_template[r][0] != r'\<':
+                    regex = text_template[r][2] if text_template[r][2] != '' \
+                        else '\w{,}'
                 else:
-                    f += 1
-                    continue
+                    regex = ''.join(text_template[r])+'>'
+            else:
+                regex = text_template[r]
+            regex = REGEX.compile(regex)
 
-                # Case pattern in end and value of pattern is the default
-                if lvars [ name ][0] == 'p':
-                    lvars [ name ] = r'\w{1,}'
+            res = regex.search(_text[i:])
+            if res:
+                res = res.group()
+                name = text_template[r][1] if type(text_template[r]) == tuple else None
 
-                # Case pattern in end
-                elif name in elvars:
-                    lvars [ name ] = elvars [ name ]
-
-                lvars [ name ] = lvars [ name ].strip()
-
-                # Getting variable...
-                variable [ name ] = REGEX.match( lvars [ name ]+compl, _text[pos:].strip() )
-
-                if variable [ name ]:
-                    variable, name, len_compl, pos = add_variable(variable, name, len_compl, pos)
-                else:
-                    variable.pop(name)
-
-            f += 1
-
-        return variable if variable != {} else None
+                if name:
+                    variables[f'<{name}>'] = res
+                i += len(res)
+            else:
+                return None
+        return variables if variables != {} else None
 
     def replace (self, _key = None, _rep = None, _text = None, _vars = None, _type = 'function', _abs = False ):
 
