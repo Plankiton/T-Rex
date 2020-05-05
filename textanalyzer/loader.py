@@ -129,7 +129,7 @@ class Config:
         # Saving data
         for key in dictionary:
 
-            if ':' is key[0]:
+            if ':' == key[0]:
                 self.properties[key] = dictionary[key]
             else:
                 if type (dictionary[key]) == str:
