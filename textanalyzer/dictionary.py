@@ -1,20 +1,6 @@
 from .loader import *
 
 
-def fix_scape(_text, isout=True):
-    if not isout:
-        _text = '<_scape%/>'.join(_text.split(r'\%'))
-        _text = '<_scape&/>'.join(_text.split(r'\&'))
-        _text = '<_scape?/>'.join(_text.split(r'\?'))
-        _text = '<_scape:/>'.join(_text.split(r'\:'))
-    else:
-        _text = '%'.join(_text.split('<_scape%/>'))
-        _text = '&'.join(_text.split('<_scape&/>'))
-        _text = ':'.join(_text.split('<_scape:/>'))
-        _text = r'\?'.join(_text.split('<_scape?/>'))
-    return _text
-
-
 def debug ( *unargs,**args ):
     print()
     for arg in args:
@@ -40,7 +26,6 @@ class Dictionary:
         f = 0
         list_var = []
 
-        _text = fix_scape(_text)
         while f <= len( _text ) and i < len( _text ):
             if _text[i] == '%':
                 text_end = _text[i:]
@@ -50,7 +35,6 @@ class Dictionary:
                     continue
                 list_var.append(_text[i:f])
             i += 1
-        _text = fix_scape(_text, 1)
 
         lvars = {}
         elvars = {}
