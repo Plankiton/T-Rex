@@ -18,5 +18,8 @@ class File:
                 self.filename = _file[ _file.rindex(ossepbar)+1:]
 
     def write (self, text):
-        self.object = open( '{}/{}'.format( self.dir, self.filename ) , 'w' )
+        self.object = open(f'{self.dir}/{self.filename}', 'w' )
         self.object.write( text )
+
+    def close (self):
+        self.object.close()
