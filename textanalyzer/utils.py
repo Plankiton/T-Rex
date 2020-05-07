@@ -17,3 +17,31 @@ def merge_lists(l1: list, l2:list):
         else:
             yield l2[c]
             c += 1
+
+def parse_args(config: dict):
+    from sys import argv
+    args = argv[1:]
+
+    limit = 0
+    for arg in config:
+        value = None
+        if arg['opt']:
+            for opt in arg['opt']:
+                if opt in args:
+                    pos = args.index(opt)+1
+                    value = args[pos] if arg['get_value'] else True
+                    break
+                elif not arg['optional']:
+                    die(f"The arg \"{'|'.join(arg['opt'])}\" required")
+        else:
+            for a in range(len(args)):
+                if not '-' in args[a] and \
+                        (not '-' in args[a-1] or a == 0)\
+                        and a >= limit:
+                    value = args[a]
+                    limit += 1
+
+        yield dict(
+            arg = arg['name'],
+            value = value
+        )
