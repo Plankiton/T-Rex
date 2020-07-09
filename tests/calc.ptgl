@@ -1,8 +1,0 @@
-algoritmo "joao"
-var
-a, b: inteiro
-inicio
-a <- 90
-b <- 90
-escreva(a+b)
-fimalgoritmo

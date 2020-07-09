@@ -31,8 +31,6 @@ def parse_args(config: dict):
                     pos = args.index(opt)+1
                     value = args[pos] if arg['get_value'] else True
                     break
-                elif not arg['optional']:
-                    die(f"The arg \"{'|'.join(arg['opt'])}\" required")
         else:
             for a in range(len(args)):
                 if not '-' in args[a] and \
@@ -40,6 +38,12 @@ def parse_args(config: dict):
                         and a >= limit:
                     value = args[a]
                     limit += 1
+
+        if not arg['optional'] and value == None:
+            arg_opts = ''
+            if arg['opt'] != [] and type(arg['opt']) == list:
+                arg_opts = ' ('+'|'.join(arg['opt'])+')'
+            die(f"The arg {arg['name']}{arg_opts} required!")
 
         yield dict(
             arg = arg['name'],
