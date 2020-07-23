@@ -27,7 +27,6 @@ class Dictionary:
             self.config
 
     def get_vars (self, _patt, _text ):
-
         i = 0
         var_templates = self.var_template.findall(_patt)
         context_list = list(remove_from_list(self.novar_template.split(_patt), ''))

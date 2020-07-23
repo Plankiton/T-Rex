@@ -24,7 +24,11 @@ def parse_args(config: dict):
 
     limit = 0
     for arg in config:
-        value = None
+        default = None
+        if 'default' in arg:
+            default = arg['default']
+
+        value = default
         if arg['opt']:
             for opt in arg['opt']:
                 if opt in args:
@@ -49,3 +53,7 @@ def parse_args(config: dict):
             arg = arg['name'],
             value = value
         )
+
+def read_stdin():
+    from sys import stdin
+    return stdin.read()
