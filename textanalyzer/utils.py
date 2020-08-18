@@ -22,6 +22,12 @@ def parse_args(config: dict):
     from sys import argv
     args = argv[1:]
 
+    if '-h' in args:
+        print(f'get [OPTIONS] pattern\n------\n\nOptions:\n------\n\n -h, --help       Show this message.')
+        for arg in config:
+            print(f' {", ".join(arg["opt"]) if arg["opt"] else arg["name"]}       {arg["help"]}.')
+        exit(0)
+
     limit = 0
     for arg in config:
         default = None
