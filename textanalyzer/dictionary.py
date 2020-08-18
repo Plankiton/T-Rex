@@ -62,9 +62,12 @@ class Dictionary:
 
         if self.var_template.search(_patt):
             variables = self.get_vars(_patt, _text)
-            for var in variables:
-                _rep = variables[var].join(_rep.split(var))
-            return _rep
+            if variables:
+                for var in variables:
+                    _rep = variables[var].join(_rep.split(var))
+                return _rep
+            else:
+                return _rep
 
         pattern = REGEX.compile(_patt)
 
