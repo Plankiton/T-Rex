@@ -3,7 +3,7 @@ Get Tool
 '''
 
 from textanalyzer.utils import parse_args, read_stdin
-from textanalyzer import REGEX as r, get_vars, replace, search
+from textanalyzer import REGEX as r, get_vars, replace, replace_by_vars, search
 
 argparser = [
     dict(
@@ -23,6 +23,13 @@ argparser = [
     dict(
         name='template',
         help='Output template',
+        opt=['-r', '--replace'],
+        get_value=True,
+        optional=True
+    ),
+    dict(
+        name='abs_template',
+        help='Absolute output template',
         opt=['-o', '--out'],
         get_value=True,
         optional=True
@@ -59,6 +66,12 @@ argparser = [
     )
 ]
 
+def do_replace_by_vars(*_a):
+    variables = get_vars(_a[0], _a[2])
+    if variables:
+        return replace_by_vars(_a[1], variables)
+    return variables
+
 def do_replace(*_a):
     return replace(_a[0], _a[1], _a[2])
 
@@ -94,10 +107,13 @@ if __name__ == "__main__":
         operation = do_replace
         _args = [args['pattern'], args['template']]
 
+    elif args['abs_template']:
+        operation = do_replace_by_vars
+        _args = [args['pattern'], args['abs_template']]
+
     response = None
     for line in input_text.split(args['breaker']):
         args = [a for a in _args]+[line]
         response = operation(*args)
         if response:
             print(response)
-
